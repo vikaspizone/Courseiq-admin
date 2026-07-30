@@ -4,8 +4,7 @@
  * Renders the main dashboard interface for authenticated users.
  */
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useDashboard } from "../hooks/useDashboard";
 import { Card } from "@/features/common/components/Card";
 import { Header } from "@/features/common/header/components/Header";
 import { NavigationMenu } from "@/features/common/header/components/NavigationMenu";
@@ -14,26 +13,9 @@ import { useLanguage } from "@/features/common/lang/contexts/LanguageContext";
 import styles from "../styles/dashboard.module.css";
 
 export function DashboardView() {
-  const router = useRouter();
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { userEmail, isSidebarOpen, setIsSidebarOpen, handleLogout } = useDashboard();
   const { language } = useLanguage();
   const strings = DASHBOARD_STRINGS[language];
-
-  useEffect(() => {
-    // Check if user is logged in
-    const email = sessionStorage.getItem("userEmail");
-    if (!email) {
-      router.push("/login");
-    } else {
-      setUserEmail(email);
-    }
-  }, [router]);
-
-  const handleLogout = () => {
-    sessionStorage.removeItem("userEmail");
-    router.push("/login");
-  };
 
   if (!userEmail) {
     return (

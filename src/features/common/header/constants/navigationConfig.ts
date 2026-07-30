@@ -27,40 +27,10 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     icon: BookOpen,
     badge: "2",
   },
+
   {
-    id: "routine",
-    translationKey: "MENU_ROUTINE",
-    icon: CalendarDays,
-  },
-  {
-    id: "exam",
-    translationKey: "MENU_EXAM",
-    icon: ClipboardEdit,
-  },
-  {
-    id: "results",
-    translationKey: "MENU_RESULTS",
-    icon: Award,
-  },
-  {
-    id: "students",
-    translationKey: "MENU_STUDENTS",
+    id: "instructor-directory",
+    translationKey: "MENU_INSTRUCTOR_DIRECTORY",
     icon: Users,
-  },
-  {
-    id: "message",
-    translationKey: "MENU_MESSAGE",
-    icon: MessageSquare,
-  },
-  {
-    id: "notice-board",
-    translationKey: "MENU_NOTICE_BOARD",
-    icon: Bell,
-  },
-  {
-    id: "live-class",
-    translationKey: "MENU_LIVE_CLASS",
-    icon: Video,
-    hasRedDot: true,
   },
 ];

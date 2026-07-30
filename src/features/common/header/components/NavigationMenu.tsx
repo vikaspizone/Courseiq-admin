@@ -2,7 +2,11 @@
  * NavigationMenu component.
  * Renders the collapsible sidebar navigation menu with mapped items.
  */
+"use client";
+
 import React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { GraduationCap, ChevronLeft } from "lucide-react";
 import { HEADER_STRINGS } from "../constants";
 import { NAVIGATION_ITEMS } from "../constants/navigationConfig";
@@ -16,6 +20,7 @@ interface NavigationMenuProps {
 export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
   const { language } = useLanguage();
   const strings = HEADER_STRINGS[language];
+  const pathname = usePathname();
 
   return (
     <div className={`flex-shrink-0 bg-white h-full flex flex-col z-50 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'} shadow-[4px_0_24px_rgba(0,0,0,0.02)]`}>
@@ -51,13 +56,13 @@ export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
         <nav className="flex flex-col gap-1.5 px-4">
           {NAVIGATION_ITEMS.map((item) => {
             const Icon = item.icon;
-            // Assuming dashboard is the active one for demonstration.
-            const isActive = item.id === "dashboard";
+            const href = `/${item.id}`;
+            const isActive = pathname?.startsWith(href);
             
             return (
-              <a 
+              <Link 
                 key={item.id}
-                href="#" 
+                href={href} 
                 className={`flex items-center ${isOpen ? 'justify-start px-4' : 'justify-center px-0'} py-3 text-[15px] font-medium rounded-xl transition-colors group relative ${
                   isActive 
                     ? "text-blue-600 bg-blue-50/50" 
@@ -86,7 +91,7 @@ export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
                     )}
                   </>
                 )}
-              </a>
+              </Link>
             );
           })}
         </nav>

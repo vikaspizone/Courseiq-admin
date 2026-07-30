@@ -1,0 +1,7 @@
+.instructorCard:hover .instructorOverlay {
+    opacity: 1;
+}
+.glassHeader {
+    backdrop-filter: blur(8px);
+    background: rgba(250, 248, 255, 0.8);
+}

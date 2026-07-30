@@ -1,4 +1,8 @@
 "use client";
+/**
+ * AppLoader.tsx
+ * This file is part of the feature module.
+ */
 
 import React from "react";
 import { Loader2 } from "lucide-react";
