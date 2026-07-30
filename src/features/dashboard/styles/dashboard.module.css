@@ -1,0 +1,15 @@
+.dashboardContainer {
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  color: white;
+}
+
+.welcomeCard {
+  background: linear-gradient(to right, rgba(37, 99, 235, 0.1), rgba(147, 51, 234, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+
