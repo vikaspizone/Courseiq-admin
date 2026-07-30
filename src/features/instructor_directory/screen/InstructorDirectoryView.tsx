@@ -4,6 +4,7 @@
  * Renders the instructor directory interface for users.
  */
 
+import Link from 'next/link';
 import { useInstructorDirectory } from '../hooks/useInstructorDirectory';
 import { Header } from "@/features/common/header/components/Header";
 import { NavigationMenu } from "@/features/common/header/components/NavigationMenu";
@@ -83,7 +84,7 @@ export const InstructorDirectoryView = () => {
                                         <span className="text-body-sm font-bold">{instructor.rating}</span>
                                         <span className="text-outline text-[12px] font-normal">({instructor.reviews})</span>
                                     </div>
-                                    <button className="text-primary font-label-caps text-label-caps hover:underline">{strings.VIEW_PROFILE}</button>
+                                    <Link href={`/instructor-directory/${instructor.id}`} className="text-primary font-label-caps text-label-caps hover:underline">{strings.VIEW_PROFILE}</Link>
                                 </div>
                             </div>
                         ))}
