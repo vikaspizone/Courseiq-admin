@@ -4,7 +4,7 @@
  */
 import { 
   LayoutDashboard, BookOpen, CalendarDays, ClipboardEdit, 
-  Award, Users, MessageSquare, Bell, Video, Shield, UserCog
+  Award, Users, MessageSquare, Bell, Video, Shield, UserCog, Key
 } from "lucide-react";
 
 export type NavigationItem = {
@@ -42,5 +42,10 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     id: "user",
     translationKey: "MENU_USERS",
     icon: UserCog,
+  },
+  {
+    id: "permission",
+    translationKey: "MENU_PERMISSIONS",
+    icon: Key,
   },
 ];
