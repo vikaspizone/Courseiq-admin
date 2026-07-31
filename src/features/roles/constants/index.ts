@@ -22,7 +22,22 @@ export const ROLE_STRINGS = {
     LABEL_NAME: "Role Name",
     LABEL_DESC: "Description",
     PLACEHOLDER_NAME: "e.g. Administrator",
-    PLACEHOLDER_DESC: "Describe the permissions for this role"
+    PLACEHOLDER_DESC: "Describe the permissions for this role",
+    BACK_TO_ROLES: "Back to Roles",
+    CREATE_NEW_ROLE_DESC: "Create a new role and assign permissions to control user access.",
+    LABEL_PERMISSIONS: "Permissions",
+    DESC_PERMISSIONS: "Select the permissions for this role",
+    TH_MODULE: "Module",
+    TH_VIEW: "View",
+    TH_CREATE: "Create",
+    TH_EDIT: "Edit",
+    TH_DELETE: "Delete",
+    TH_MANAGE: "Manage",
+    CANCEL: "Cancel",
+    TIPS: "Tips",
+    TIP_1: "Role names should be unique",
+    TIP_2: "Assign only required permissions",
+    TIP_3: "Roles can be edited later"
   },
   hi: {
     TITLE: "भूमिकाएँ",
@@ -42,6 +57,21 @@ export const ROLE_STRINGS = {
     LABEL_NAME: "भूमिका का नाम",
     LABEL_DESC: "विवरण",
     PLACEHOLDER_NAME: "उदा. व्यवस्थापक",
-    PLACEHOLDER_DESC: "इस भूमिका के लिए अनुमतियों का वर्णन करें"
+    PLACEHOLDER_DESC: "इस भूमिका के लिए अनुमतियों का वर्णन करें",
+    BACK_TO_ROLES: "भूमिकाओं पर वापस लौटें",
+    CREATE_NEW_ROLE_DESC: "एक नई भूमिका बनाएँ और उपयोगकर्ता पहुंच को नियंत्रित करने के लिए अनुमतियां असाइन करें।",
+    LABEL_PERMISSIONS: "अनुमतियाँ",
+    DESC_PERMISSIONS: "इस भूमिका के लिए अनुमतियां चुनें",
+    TH_MODULE: "मॉड्यूल",
+    TH_VIEW: "देखें",
+    TH_CREATE: "बनाएं",
+    TH_EDIT: "संपादित करें",
+    TH_DELETE: "हटाएं",
+    TH_MANAGE: "प्रबंधित करें",
+    CANCEL: "रद्द करें",
+    TIPS: "सुझाव",
+    TIP_1: "भूमिका के नाम अद्वितीय होने चाहिए",
+    TIP_2: "केवल आवश्यक अनुमतियां असाइन करें",
+    TIP_3: "भूमिकाओं को बाद में संपादित किया जा सकता है"
   }
 };

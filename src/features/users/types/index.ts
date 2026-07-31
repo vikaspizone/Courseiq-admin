@@ -11,4 +11,6 @@ export interface User {
   roleName?: string; // computed field
   status: 'active' | 'inactive';
   createdAt: string;
+  phone?: string;
+  about?: string;
 }
