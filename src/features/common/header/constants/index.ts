@@ -17,6 +17,8 @@ export const HEADER_STRINGS = {
     MENU_NOTICE_BOARD: "Notice Board",
     MENU_LIVE_CLASS: "Live Class",
     MENU_INSTRUCTOR_DIRECTORY: "Instructor Directory",
+    MENU_ROLES: "Roles",
+    MENU_USERS: "Users",
   },
   hi: {
     APP_NAME: "COURSIQ",
@@ -31,5 +33,7 @@ export const HEADER_STRINGS = {
     MENU_NOTICE_BOARD: "सूचना पट्ट",
     MENU_LIVE_CLASS: "लाइव क्लास",
     MENU_INSTRUCTOR_DIRECTORY: "इंस्ट्रक्टर डायरेक्टरी",
+    MENU_ROLES: "भूमिकाएँ",
+    MENU_USERS: "उपयोगकर्ता",
   }
 };

@@ -1,6 +1,6 @@
 /**
- * useDashboard.ts
- * This file is part of the feature module.
+ * useDashboard Hook.
+ * Custom React hook for useDashboard.
  */
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';

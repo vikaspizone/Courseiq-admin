@@ -1,6 +1,6 @@
 /**
- * useInstructorDirectory.ts
- * This file is part of the feature module.
+ * useInstructorDirectory Hook.
+ * Custom React hook for useInstructorDirectory.
  */
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';

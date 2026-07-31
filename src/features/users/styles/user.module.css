@@ -1,0 +1,7 @@
+/* 
+  User feature specific styles.
+  Currently utilizing Tailwind CSS via className, but this file is reserved for complex or custom user-specific styling needs.
+*/
+.userContainer {
+  /* Add custom user styles here */
+}

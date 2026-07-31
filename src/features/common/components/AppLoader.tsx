@@ -1,7 +1,7 @@
 "use client";
 /**
- * AppLoader.tsx
- * This file is part of the feature module.
+ * AppLoader Component.
+ * UI component for AppLoader.
  */
 
 import React from "react";

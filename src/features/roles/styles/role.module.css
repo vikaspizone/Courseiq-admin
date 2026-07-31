@@ -1,0 +1,7 @@
+/* 
+  Role feature specific styles.
+  Currently utilizing Tailwind CSS via className, but this file is reserved for complex or custom role-specific styling needs.
+*/
+.roleContainer {
+  /* Add custom role styles here */
+}
