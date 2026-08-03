@@ -4,51 +4,23 @@
  * Handles user registration and account creation.
  */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/features/common/lang/contexts/LanguageContext";
 import { AUTH_STRINGS } from "../constants";
 import { AppLoader } from "@/features/common/components/AppLoader";
+import { ROUTES } from "@/features/common/constants/routes";
+import { useRegister } from "../hooks/useRegister";
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [bgGradient, setBgGradient] = useState("none");
-  const router = useRouter();
+  const { loading, success, bgGradient, handleRegister } = useRegister();
 
   const { language } = useLanguage();
   const strings = AUTH_STRINGS[language];
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
-      
-      if (window.innerWidth > 1024) {
-        setBgGradient(`radial-gradient(circle at ${x * 100}% ${y * 100}%, #ffffff 0%, #faf8ff 100%)`);
-      }
-    };
 
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    // Mock success
-    setTimeout(() => {
-      setLoading(false);
-      setSuccess(true);
-      // Redirect after success
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
-    }, 1500);
-  };
 
   return (
     <div className="flex min-h-screen overflow-hidden bg-background text-on-background font-body-md w-full">
@@ -210,7 +182,7 @@ export function RegisterForm() {
 
           <p className="mt-stack-gap-lg text-center font-body-md text-on-surface-variant">
             {strings.ALREADY_HAVE_ACCOUNT}{" "}
-            <Link className="text-primary font-semibold hover:underline" href="/auth/login">
+            <Link className="text-primary font-semibold hover:underline" href={ROUTES.LOGIN}>
               {strings.SIGN_IN_BUTTON}
             </Link>
           </p>
@@ -219,3 +191,4 @@ export function RegisterForm() {
     </div>
   );
 }
+

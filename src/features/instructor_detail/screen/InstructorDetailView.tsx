@@ -1,8 +1,8 @@
+'use client';
 /**
  * InstructorDetailView component.
  * Displays the detailed profile of an instructor including their credentials and courses.
  */
-"use client";
 
 import { useInstructorDetail } from '../hooks/useInstructorDetail';
 import { Header } from "@/features/common/header/components/Header";

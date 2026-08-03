@@ -1,8 +1,8 @@
-"use client";
+'use client';
 /**
  * InstructorDirectoryView component.
  * Renders the instructor directory interface for users.
- */
+*/
 
 import Link from 'next/link';
 import { useInstructorDirectory } from '../hooks/useInstructorDirectory';
@@ -11,6 +11,7 @@ import { NavigationMenu } from "@/features/common/header/components/NavigationMe
 import { useLanguage } from "@/features/common/lang/contexts/LanguageContext";
 import { INSTRUCTOR_DIRECTORY_STRINGS, MOCK_INSTRUCTORS } from '../constants';
 import styles from '../styles/instructor_directory.module.css';
+import { ROUTES } from '@/features/common/constants/routes';
 
 export const InstructorDirectoryView = () => {
     const { userEmail, isSidebarOpen, setIsSidebarOpen, handleLogout } = useInstructorDirectory();
@@ -84,7 +85,7 @@ export const InstructorDirectoryView = () => {
                                         <span className="text-body-sm font-bold">{instructor.rating}</span>
                                         <span className="text-outline text-[12px] font-normal">({instructor.reviews})</span>
                                     </div>
-                                    <Link href={`/instructor-directory/${instructor.id}`} className="text-primary font-label-caps text-label-caps hover:underline">{strings.VIEW_PROFILE}</Link>
+                                    <Link href={`${ROUTES.INSTRUCTOR_DIRECTORY}/${instructor.id}`} className="text-primary font-label-caps text-label-caps hover:underline">{strings.VIEW_PROFILE}</Link>
                                 </div>
                             </div>
                         ))}

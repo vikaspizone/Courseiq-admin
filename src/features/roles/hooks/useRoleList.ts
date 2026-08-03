@@ -24,13 +24,13 @@ export function useRoleList() {
   };
 
   useEffect(() => {
-    fetchRoles();
+    Promise.resolve().then(() => fetchRoles());
   }, []);
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this role?')) {
       await deleteRole(id);
-      fetchRoles();
+      Promise.resolve().then(() => fetchRoles());
     }
   };
 

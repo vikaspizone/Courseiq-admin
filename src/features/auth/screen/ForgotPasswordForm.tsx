@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { AUTH_STRINGS } from "../constants";
 import { useLanguage } from "@/features/common/lang/contexts/LanguageContext";
 import { AppLoader } from "@/features/common/components/AppLoader";
+import { ROUTES } from "@/features/common/constants/routes";
 
 export function ForgotPasswordForm() {
     const { language } = useLanguage();
@@ -16,7 +17,7 @@ export function ForgotPasswordForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
         
@@ -107,7 +108,7 @@ export function ForgotPasswordForm() {
 
                         {/* Navigation Footer */}
                         <footer className="mt-stack-gap-lg pt-stack-gap-lg border-t border-outline-variant/30 flex justify-center">
-                            <Link href="/auth/login" className="inline-flex items-center gap-2 text-primary font-body-md hover:underline group">
+                            <Link href={ROUTES.LOGIN} className="inline-flex items-center gap-2 text-primary font-body-md hover:underline group">
                                 <span className="material-symbols-outlined text-xl group-hover:-translate-x-1 transition-transform">arrow_back</span>
                                 {strings.BACK_TO_SIGNIN}
                             </Link>

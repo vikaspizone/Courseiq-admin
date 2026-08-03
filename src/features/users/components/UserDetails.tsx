@@ -1,4 +1,5 @@
 'use client';
+import { ROUTES } from '@/features/common/constants/routes';
 
 /**
  * User Details Component.
@@ -25,7 +26,7 @@ export const UserDetails: React.FC<UserDetailsProps> = ({ user }) => {
       <div className="flex justify-between items-center mb-6">
         <div>
           <Link
-            href="/user"
+            href={ROUTES.USER}
             className="text-blue-600 hover:text-blue-700 flex items-center text-sm font-medium transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
@@ -194,3 +195,4 @@ export const UserDetails: React.FC<UserDetailsProps> = ({ user }) => {
     </div>
   );
 };
+

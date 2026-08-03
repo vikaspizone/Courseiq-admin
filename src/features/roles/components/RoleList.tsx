@@ -3,7 +3,7 @@
 /**
  * Role List Component.
  * Displays a list of roles with management actions.
- */
+*/
 
 import React from 'react';
 import Link from 'next/link';
@@ -12,6 +12,7 @@ import { AppLoader } from '@/features/common/components/AppLoader';
 import { useRoleList } from '../hooks/useRoleList';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { ROLE_STRINGS } from '../constants';
+import { ROUTES } from '@/features/common/constants/routes';
 
 export const RoleList: React.FC = () => {
   const { roles, loading, handleDelete } = useRoleList();
@@ -30,7 +31,7 @@ export const RoleList: React.FC = () => {
           <p className="text-sm text-gray-500 mt-1">{strings.DESC}</p>
         </div>
         <Link
-          href="/role/create"
+          href={ROUTES.ROLE_CREATE}
           className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-4 shadow-sm"
         >
           <Plus className="w-4 h-4 mr-2" />
@@ -90,3 +91,4 @@ export const RoleList: React.FC = () => {
     </div>
   );
 };
+

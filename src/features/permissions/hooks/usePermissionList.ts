@@ -24,13 +24,13 @@ export function usePermissionList() {
   };
 
   useEffect(() => {
-    fetchPermissions();
+    Promise.resolve().then(() => fetchPermissions());
   }, []);
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this permission?')) {
       await deletePermission(id);
-      fetchPermissions();
+      Promise.resolve().then(() => fetchPermissions());
     }
   };
 

@@ -1,3 +1,4 @@
+'use client';
 /**
  * User List Hook.
  * Custom hook for fetching and managing the user list.
@@ -24,13 +25,13 @@ export function useUserList() {
   };
 
   useEffect(() => {
-    fetchUsers();
+    Promise.resolve().then(() => fetchUsers());
   }, []);
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this user?')) {
       await deleteUser(id);
-      fetchUsers();
+      Promise.resolve().then(() => fetchUsers());
     }
   };
 

@@ -3,7 +3,7 @@
 /**
  * User Form Component.
  * Provides a form for creating and editing users.
- */
+*/
 
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -14,6 +14,7 @@ import { useUserForm } from '../hooks/useUserForm';
 import { UserSchema } from '../validation';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { USER_STRINGS } from '../constants';
+import { ROUTES } from '@/features/common/constants/routes';
 
 interface UserFormProps {
   initialData?: User;
@@ -35,7 +36,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       <div className="flex justify-between items-center mb-6">
         <div>
           <Link
-            href="/user"
+            href={ROUTES.USER}
             className="text-blue-600 hover:text-blue-700 flex items-center text-sm font-medium transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
@@ -146,7 +147,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                          <label className="text-sm font-medium text-gray-700">
                            {strings.LABEL_ROLE} <span className="text-red-500">*</span>
                          </label>
-                         <Link href="/role/create" className="inline-flex items-center justify-center rounded-md text-xs font-medium border border-blue-200 text-blue-600 bg-white hover:bg-blue-50 h-8 py-1.5 px-3 shadow-sm transition-colors">
+                         <Link href={ROUTES.ROLE_CREATE} className="inline-flex items-center justify-center rounded-md text-xs font-medium border border-blue-200 text-blue-600 bg-white hover:bg-blue-50 h-8 py-1.5 px-3 shadow-sm transition-colors">
                            <Shield className="w-3 h-3 mr-1.5" />
                            {strings.ADD_ROLE}
                          </Link>

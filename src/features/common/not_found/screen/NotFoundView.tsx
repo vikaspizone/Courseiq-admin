@@ -1,4 +1,5 @@
-"use client";
+'use client';
+import { ROUTES } from '@/features/common/constants/routes';
 /**
  * NotFoundView component.
  * Renders the 404 custom page for the application.
@@ -39,7 +40,7 @@ export function NotFoundView() {
           </p>
           
           <Link 
-            href="/dashboard"
+            href={ROUTES.DASHBOARD}
             className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-xl font-medium transition-colors shadow-sm w-full sm:w-auto"
           >
             {strings.GO_TO_DASHBOARD}

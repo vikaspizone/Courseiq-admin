@@ -18,10 +18,14 @@ export const AUTH_MESSAGES = {
   en: {
     INVALID_CREDENTIALS: "Invalid email or password",
     LOGIN_SUCCESS: "Login successful",
+    SERVER_ERROR: "Server Error. Please try again later.",
+    SESSION_EXPIRED: "Session expired. Please log in again."
   },
   hi: {
     INVALID_CREDENTIALS: "अमान्य ईमेल या पासवर्ड",
     LOGIN_SUCCESS: "लॉगिन सफल",
+    SERVER_ERROR: "सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।",
+    SESSION_EXPIRED: "आपका सत्र समाप्त हो गया है। कृपया फिर से लॉग इन करें।"
   }
 };
 
@@ -75,7 +79,10 @@ export const AUTH_STRINGS = {
     RESET_SUCCESS: "Check your inbox! We've sent password reset instructions to your email.",
     BACK_TO_SIGNIN: "Back to Sign In",
     STILL_TROUBLE: "Still having trouble?",
-    CONTACT_SUPPORT: "Contact Support"
+    CONTACT_SUPPORT: "Contact Support",
+    SESSION_ENDED: "Session Ended",
+    SESSION_EXPIRED: "Your session has expired. Please log in again to continue.",
+    LOG_IN_AGAIN: "Log In Again"
   },
   hi: {
     TITLE: "वापसी पर स्वागत है",
@@ -126,6 +133,9 @@ export const AUTH_STRINGS = {
     RESET_SUCCESS: "अपना इनबॉक्स जांचें! हमने आपके ईमेल पर पासवर्ड रीसेट निर्देश भेज दिए हैं।",
     BACK_TO_SIGNIN: "साइन इन पर वापस जाएं",
     STILL_TROUBLE: "अभी भी परेशानी हो रही है?",
-    CONTACT_SUPPORT: "समर्थन से संपर्क करें"
+    CONTACT_SUPPORT: "समर्थन से संपर्क करें",
+    SESSION_ENDED: "सत्र समाप्त",
+    SESSION_EXPIRED: "आपका सत्र समाप्त हो गया है। कृपया जारी रखने के लिए फिर से लॉग इन करें।",
+    LOG_IN_AGAIN: "फिर से लॉग इन करें"
   }
 };

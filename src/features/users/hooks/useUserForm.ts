@@ -1,7 +1,7 @@
 /**
  * User Form Hook.
  * Custom hook for handling user form state and submission.
- */
+*/
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,7 @@ import { User } from '../types';
 import { createUser, updateUser } from '../api/mockData';
 import { getRoles } from '@/features/roles/api/mockData';
 import { Role } from '@/features/roles/types';
+import { ROUTES } from '@/features/common/constants/routes';
 
 export function useUserForm(initialData?: User) {
   const router = useRouter();
@@ -24,7 +25,7 @@ export function useUserForm(initialData?: User) {
         console.error('Failed to fetch roles', error);
       }
     };
-    fetchRoles();
+    Promise.resolve().then(() => fetchRoles());
   }, []);
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
@@ -34,7 +35,7 @@ export function useUserForm(initialData?: User) {
       } else {
         await createUser(values);
       }
-      router.push('/user');
+      router.push(ROUTES.USER);
     } catch (error) {
       console.error('Failed to save user', error);
       alert('Failed to save user');

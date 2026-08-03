@@ -3,7 +3,7 @@
 /**
  * Role Form Component.
  * Provides a form for creating and editing roles.
- */
+*/
 
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -15,6 +15,7 @@ import { useRoleForm } from '../hooks/useRoleForm';
 import { RoleSchema } from '../validation';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { ROLE_STRINGS } from '../constants';
+import { ROUTES } from '@/features/common/constants/routes';
 
 interface RoleFormProps {
   initialData?: Role;
@@ -37,7 +38,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
     <div className="w-full">
       <div className="flex items-center space-x-2 mb-4">
         <Link
-          href="/role"
+          href={ROUTES.ROLE}
           className="text-blue-600 hover:text-blue-700 flex items-center text-sm font-medium transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
@@ -198,3 +199,4 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
     </div>
   );
 };
+

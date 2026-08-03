@@ -3,7 +3,7 @@
 /**
  * Permission Form Component.
  * Provides a form for creating and editing permissions.
- */
+*/
 
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -14,6 +14,7 @@ import { usePermissionForm } from '../hooks/usePermissionForm';
 import { PermissionSchema } from '../validation';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { PERMISSION_STRINGS } from '../constants';
+import { ROUTES } from '@/features/common/constants/routes';
 
 interface PermissionFormProps {
   initialData?: Permission;
@@ -37,7 +38,7 @@ export const PermissionForm: React.FC<PermissionFormProps> = ({ initialData }) =
     <div className="w-full">
       <div className="flex items-center space-x-2 mb-4">
         <Link
-          href="/permission"
+          href={ROUTES.PERMISSION}
           className="text-blue-600 hover:text-blue-700 flex items-center text-sm font-medium transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
@@ -136,7 +137,7 @@ export const PermissionForm: React.FC<PermissionFormProps> = ({ initialData }) =
 
                 <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 mt-8 pt-6">
                   <Link
-                    href="/permission"
+                    href={ROUTES.PERMISSION}
                     className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 h-10 py-2 px-6 shadow-sm transition-colors"
                   >
                     {strings.CANCEL}
@@ -178,3 +179,4 @@ export const PermissionForm: React.FC<PermissionFormProps> = ({ initialData }) =
     </div>
   );
 };
+

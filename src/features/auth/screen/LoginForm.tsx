@@ -11,9 +11,13 @@ import { AUTH_MESSAGES, AUTH_STRINGS } from "../constants";
 import { useLanguage } from "@/features/common/lang/contexts/LanguageContext";
 import { useState } from "react";
 import { AppLoader } from "@/features/common/components/AppLoader";
+import { ROUTES } from "@/features/common/constants/routes";
 
 export function LoginForm() {
-  const { email, setEmail, password, setPassword, error, loading, handleLogin } = useAuth();
+  const { 
+    email, setEmail, password, setPassword, error, loading, handleLogin, 
+    sessionExpired, setSessionExpired 
+  } = useAuth();
   const { language } = useLanguage();
   const strings = AUTH_STRINGS[language];
   const messages = AUTH_MESSAGES[language];
@@ -22,6 +26,34 @@ export function LoginForm() {
   return (
     <div className="flex min-h-screen overflow-hidden bg-background text-on-background font-body-md selection:bg-primary-fixed-dim w-full">
       {loading && <AppLoader message={`${strings.SIGN_IN_BUTTON}...`} />}
+      
+      {/* Session Expired Modal */}
+      {sessionExpired && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/60 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="flex flex-col items-center p-8 bg-surface rounded-2xl shadow-2xl border border-outline-variant/30 max-w-sm w-[90%] mx-auto">
+            <div className="relative flex items-center justify-center w-20 h-20 mb-6 text-error">
+              <div className="absolute inset-0 bg-error/20 rounded-full animate-ping"></div>
+              <div className="absolute inset-2 bg-error/10 rounded-full animate-pulse"></div>
+              <span className="material-symbols-outlined text-4xl relative z-10" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
+            </div>
+            
+            <h3 className="text-xl font-headline-md font-semibold text-on-surface mb-2 tracking-tight text-center">
+              {strings.SESSION_ENDED}
+            </h3>
+            <p className="text-sm font-body-sm text-on-surface-variant text-center max-w-[250px] mb-8">
+              {strings.SESSION_EXPIRED}
+            </p>
+
+            <button 
+              onClick={() => setSessionExpired(false)}
+              className="w-full py-3 px-6 bg-primary text-on-primary font-semibold rounded-xl shadow-lg shadow-primary/20 hover:bg-on-primary-fixed-variant transition-all active:scale-[0.98] duration-100"
+            >
+              {strings.LOG_IN_AGAIN}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Left Side: Inspiring Academic Visual */}
       <section className="hidden lg:flex lg:w-1/2 relative bg-primary-container items-center justify-center overflow-hidden">
         {/* Background Image with Overlay */}
@@ -149,7 +181,7 @@ export function LoginForm() {
             <form onSubmit={handleLogin} className="space-y-6">
               {error && (
                 <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium border border-red-100">
-                  {messages.INVALID_CREDENTIALS}
+                  {error}
                 </div>
               )}
 
@@ -185,7 +217,7 @@ export function LoginForm() {
                     {strings.PASSWORD_LABEL}
                   </label>
                   <Link
-                    href="/auth/forgot-password"
+                    href={ROUTES.FORGOT_PASSWORD}
                     className="text-xs font-semibold text-primary hover:underline transition-all"
                   >
                     {strings.FORGOT_PASSWORD}
@@ -251,7 +283,7 @@ export function LoginForm() {
               <p className="font-body-sm text-body-sm text-on-surface-variant">
                 {strings.NO_ACCOUNT}{" "}
                 <Link
-                  href="/auth/register"
+                  href={ROUTES.REGISTER}
                   className="font-semibold text-primary hover:underline transition-all"
                 >
                   {strings.SIGN_UP_LINK}

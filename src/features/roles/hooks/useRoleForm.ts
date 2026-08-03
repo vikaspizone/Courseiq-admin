@@ -1,11 +1,12 @@
 /**
  * Role Form Hook.
  * Custom hook for handling role form state and submission.
- */
+*/
 
 import { useRouter } from 'next/navigation';
 import { Role } from '../types';
 import { createRole, updateRole } from '../api/mockData';
+import { ROUTES } from '@/features/common/constants/routes';
 
 export function useRoleForm(initialData?: Role) {
   const router = useRouter();
@@ -18,7 +19,7 @@ export function useRoleForm(initialData?: Role) {
       } else {
         await createRole(values);
       }
-      router.push('/role');
+      router.push(ROUTES.ROLE);
     } catch (error) {
       console.error('Failed to save role', error);
       alert('Failed to save role');

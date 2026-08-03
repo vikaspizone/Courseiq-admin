@@ -1,8 +1,8 @@
+'use client';
 /**
  * NavigationMenu component.
  * Renders the collapsible sidebar navigation menu with mapped items.
  */
-"use client";
 
 import React from "react";
 import Link from "next/link";
