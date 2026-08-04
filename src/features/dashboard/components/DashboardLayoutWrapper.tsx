@@ -11,7 +11,7 @@ import { Header } from "@/features/common/header/components/Header";
 import { NavigationMenu } from "@/features/common/header/components/NavigationMenu";
 
 export function DashboardLayoutWrapper({ children }: { children: React.ReactNode }) {
-  const { userEmail, isSidebarOpen, setIsSidebarOpen, handleLogout } = useDashboard();
+  const { userEmail, userProfile, isSidebarOpen, setIsSidebarOpen, handleLogout } = useDashboard();
 
   if (!userEmail) {
     return (
@@ -27,6 +27,7 @@ export function DashboardLayoutWrapper({ children }: { children: React.ReactNode
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto relative">
         <Header 
           userEmail={userEmail} 
+          userProfile={userProfile}
           onLogout={handleLogout}
           isSidebarOpen={isSidebarOpen}
           onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}

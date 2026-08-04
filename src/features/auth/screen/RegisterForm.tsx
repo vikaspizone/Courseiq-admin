@@ -14,8 +14,7 @@ import { ROUTES } from "@/features/common/constants/routes";
 import { useRegister } from "../hooks/useRegister";
 
 export function RegisterForm() {
-  const [showPassword, setShowPassword] = useState(false);
-  const { loading, success, bgGradient, handleRegister } = useRegister();
+  const { loading, success, error, showPassword, setShowPassword, bgGradient, handleRegister } = useRegister();
 
   const { language } = useLanguage();
   const strings = AUTH_STRINGS[language];
@@ -155,6 +154,13 @@ export function RegisterForm() {
                 {strings.I_AGREE_TO}<Link className="text-primary hover:underline font-semibold" href="#">{strings.TERMS}</Link>{strings.AND}<Link className="text-primary hover:underline font-semibold" href="#">{strings.PRIVACY}</Link>{strings.AGREEMENT_END}
               </label>
             </div>
+            
+            {error && (
+              <div className="p-3 rounded-lg bg-error-container text-on-error-container font-body-sm text-sm border border-error/20 flex items-start gap-2">
+                <span className="material-symbols-outlined text-[18px]">error</span>
+                <span>{error}</span>
+              </div>
+            )}
 
             <button
               className={`w-full h-12 text-white font-headline-md text-headline-md rounded-lg active:scale-[0.98] transition-all duration-100 shadow-md flex items-center justify-center gap-2 mt-stack-gap-lg ${
