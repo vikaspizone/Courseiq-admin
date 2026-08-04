@@ -1,13 +1,13 @@
 /**
- * User Form Hook.
- * Custom hook for handling user form state and submission.
-*/
+ * useUserForm Hook.
+ * Provides useUserForm functionality for the feature.
+ */
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { User } from '../types';
-import { createUser, updateUser } from '../api/mockData';
-import { getRoles } from '@/features/roles/api/mockData';
+import { User, UserPayload } from '../types';
+import { createUser, updateUser } from '../api/userApi';
+import { getRoles } from '@/features/roles/api/roleApi';
 import { Role } from '@/features/roles/types';
 import { ROUTES } from '@/features/common/constants/routes';
 
@@ -30,10 +30,21 @@ export function useUserForm(initialData?: User) {
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
     try {
-      if (isEditing && initialData) {
-        await updateUser(initialData.id, values);
+      const payload = {
+        ...values,
+        isActive: values.isActive === true || String(values.isActive) === 'true',
+        experience: values.experience ? Number(values.experience) : 0,
+        languages: typeof values.languages === 'string' ? values.languages.split(',').map((l: string) => l.trim()).filter(Boolean) : values.languages,
+        qualification: values.qualification ? {
+          ...values.qualification,
+          year: values.qualification.year ? Number(values.qualification.year) : new Date().getFullYear(),
+        } : undefined,
+      };
+
+      if (isEditing && initialData && initialData.id) {
+        await updateUser(initialData.id, payload);
       } else {
-        await createUser(values);
+        await createUser(payload);
       }
       router.push(ROUTES.USER);
     } catch (error) {

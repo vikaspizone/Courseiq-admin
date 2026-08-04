@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { User } from '../types';
-import { getUsers, deleteUser } from '../api/mockData';
+import { getUsers, deleteUser } from '../api/userApi';
 
 export function useUserList() {
   const [users, setUsers] = useState<User[]>([]);

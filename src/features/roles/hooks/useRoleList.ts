@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { Role } from '../types';
-import { getRoles, deleteRole } from '../api/mockData';
+import { getRoles, deleteRole } from '../api/roleApi';
 
 export function useRoleList() {
   const [roles, setRoles] = useState<Role[]>([]);

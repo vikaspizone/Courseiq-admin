@@ -13,4 +13,5 @@ export const RoleSchema = Yup.object().shape({
   description: Yup.string()
     .max(500, 'Description cannot exceed 500 characters')
     .optional(),
+  isActive: Yup.boolean().optional(),
 });

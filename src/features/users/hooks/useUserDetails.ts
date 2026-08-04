@@ -1,11 +1,11 @@
 /**
- * User Details Hook.
- * Custom hook for fetching details of a specific user.
+ * useUserDetails Hook.
+ * Provides useUserDetails functionality for the feature.
  */
 
 import { useState, useEffect } from 'react';
 import { User } from '../types';
-import { getUserById } from '../api/mockData';
+import { getUserById } from '../api/userApi';
 
 export function useUserDetails(id: string) {
   const [user, setUser] = useState<User | null>(null);

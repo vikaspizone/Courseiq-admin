@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { FormInput } from '../../common/components/FormInput';
 import { Role } from '../types';
-import { ArrowLeft, Save, User, FileText, Shield, Lightbulb, LayoutDashboard, BookOpen, Users, UserSquare } from 'lucide-react';
+import { ArrowLeft, Save, User, FileText, Shield, Lightbulb, LayoutDashboard, BookOpen, Users, UserSquare, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { useRoleForm } from '../hooks/useRoleForm';
 import { RoleSchema } from '../validation';
@@ -61,6 +61,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
             initialValues={{
               name: initialData?.name || '',
               description: initialData?.description || '',
+              isActive: initialData?.isActive ?? initialData?.is_active ?? true,
             }}
             validationSchema={RoleSchema}
             onSubmit={handleSubmit}
@@ -86,25 +87,46 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
                   </div>
                 </div>
 
-                {/* Description */}
-                <div className="flex gap-4 items-start">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
-                    <FileText className="text-blue-500 w-6 h-6" />
-                  </div>
-                  <div className="flex-1">
-                     <label className="text-sm font-medium text-gray-700 block mb-1">
-                       {strings.LABEL_DESC}
-                     </label>
-                     <Field
-                        as="textarea"
-                        name="description"
-                        rows={3}
-                        placeholder={strings.PLACEHOLDER_DESC}
-                        className="flex w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 resize-none"
-                     />
-                     <ErrorMessage name="description" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
-                  </div>
-                </div>
+                 <div className="flex gap-4 items-start">
+                   <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                     <FileText className="text-blue-500 w-6 h-6" />
+                   </div>
+                   <div className="flex-1">
+                      <label className="text-sm font-medium text-gray-700 block mb-1">
+                        {strings.LABEL_DESC}
+                      </label>
+                      <Field
+                         as="textarea"
+                         name="description"
+                         rows={3}
+                         placeholder={strings.PLACEHOLDER_DESC}
+                         className="flex w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 resize-none"
+                      />
+                      <ErrorMessage name="description" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                   </div>
+                 </div>
+
+                 {/* Status */}
+                 <div className="flex gap-4 items-start">
+                   <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                     <Settings className="text-blue-500 w-6 h-6" />
+                   </div>
+                   <div className="flex-1">
+                      <label className="text-sm font-medium text-gray-700 block mb-1">
+                        Status <span className="text-red-500">*</span>
+                      </label>
+                      <Field
+                         as="select"
+                         name="isActive"
+                         className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-gray-700"
+                      >
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                      </Field>
+                      <ErrorMessage name="isActive" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                   </div>
+                 </div>
+
 
                 {/* Permissions */}
                 <div className="flex gap-4 items-start">

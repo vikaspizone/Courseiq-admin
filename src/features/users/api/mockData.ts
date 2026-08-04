@@ -4,23 +4,25 @@
  */
 
 import { User } from '../types';
-import { getRoles } from '@/features/roles/api/mockData';
+import { getRoles } from '@/features/roles/api/roleApi';
+
+import { Role } from '@/features/roles/types';
 
 let mockUsers: User[] = [
   {
     id: '1',
     name: 'John Doe',
     email: 'john@example.com',
-    roleId: '1',
-    status: 'active',
+    role_id: '1',
+    is_active: true,
     createdAt: new Date().toISOString(),
   },
   {
     id: '2',
     name: 'Jane Smith',
     email: 'jane@example.com',
-    roleId: '2',
-    status: 'active',
+    role_id: '2',
+    is_active: true,
     createdAt: new Date().toISOString(),
   },
 ];
@@ -30,7 +32,7 @@ export const getUsers = async (): Promise<User[]> => {
   return new Promise((resolve) => {
     const populated = mockUsers.map((u) => ({
       ...u,
-      roleName: roles.find((r) => r.id === u.roleId)?.name || 'Unknown',
+      role: roles.find((r: Role) => r.id === u.role_id) || undefined,
     }));
     setTimeout(() => resolve(populated), 500);
   });
@@ -41,13 +43,13 @@ export const getUserById = async (id: string): Promise<User | undefined> => {
   return new Promise((resolve) => {
     const user = mockUsers.find((u) => u.id === id);
     if (user) {
-      user.roleName = roles.find((r) => r.id === user.roleId)?.name || 'Unknown';
+      user.role = roles.find((r: Role) => r.id === user.role_id) || undefined;
     }
     setTimeout(() => resolve(user), 500);
   });
 };
 
-export const createUser = (user: Omit<User, 'id' | 'createdAt' | 'roleName'>): Promise<User> => {
+export const createUser = (user: Omit<User, 'id' | 'createdAt' | 'role'>): Promise<User> => {
   return new Promise((resolve) => {
     const newUser: User = {
       ...user,

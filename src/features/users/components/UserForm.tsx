@@ -8,7 +8,7 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { User } from '../types';
-import { ArrowLeft, Save, User as UserIcon, Mail, Shield, Settings, Phone, Lock, Eye, FileText, Camera, Plus } from 'lucide-react';
+import { ArrowLeft, Save, User as UserIcon, Mail, Shield, Settings, Phone, Lock, Eye, FileText, Camera, Calendar, Briefcase, GraduationCap, MapPin, Globe, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useUserForm } from '../hooks/useUserForm';
 import { UserSchema } from '../validation';
@@ -56,11 +56,26 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
           initialValues={{
             name: initialData?.name || '',
             email: initialData?.email || '',
-            roleId: initialData?.roleId || '',
-            status: initialData?.status || 'active',
-            phone: '',
+            role_id: initialData?.role_id || '',
+            isActive: initialData?.isActive ?? true,
+            phone: initialData?.phone || '',
             password: '',
-            about: ''
+            about: initialData?.about || '',
+            gender: initialData?.gender || 'male',
+            dateOfBirth: initialData?.dateOfBirth || '',
+            experience: initialData?.experience || 0,
+            qualification: {
+              degree: initialData?.qualification?.degree || '',
+              year: initialData?.qualification?.year || new Date().getFullYear()
+            },
+            address: {
+              city: initialData?.address?.city || '',
+              country: initialData?.address?.country || ''
+            },
+            work: {
+              company: initialData?.work?.company || '',
+              title: initialData?.work?.title || ''
+            }
           }}
           validationSchema={UserSchema} // Might need to update validation schema later
           onSubmit={handleSubmit}
@@ -154,15 +169,15 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                        </div>
                        <Field
                           as="select"
-                          name="roleId"
+                          name="role_id"
                           className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-gray-700"
                        >
-                         <option value="" disabled>Select a role</option>
+                         <option value="" disabled>{strings.SELECT_ROLE}</option>
                          {roleOptions.map((opt: any) => (
                            <option key={opt.value} value={opt.value}>{opt.label}</option>
                          ))}
                        </Field>
-                       <ErrorMessage name="roleId" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                       <ErrorMessage name="role_id" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
                     </div>
                   </div>
 
@@ -177,14 +192,13 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                        </label>
                        <Field
                           as="select"
-                          name="status"
+                          name="isActive"
                           className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-gray-700"
                        >
-                         {statusOptions.map((opt: any) => (
-                           <option key={opt.value} value={opt.value}>{opt.label}</option>
-                         ))}
+                         <option value="true">{strings.STATUS_ACTIVE}</option>
+                         <option value="false">{strings.STATUS_INACTIVE}</option>
                        </Field>
-                       <ErrorMessage name="status" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                       <ErrorMessage name="isActive" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
                     </div>
                   </div>
 
@@ -244,6 +258,156 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                           placeholder={strings.PLACEHOLDER_ABOUT}
                           className="flex w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 resize-none"
                        />
+                    </div>
+                  </div>
+
+                  {/* Gender */}
+                  <div className="flex gap-3 items-start">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <Users className="text-blue-500 w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                       <label className="text-sm font-medium text-gray-700 block mb-1">
+                         {strings.LABEL_GENDER}
+                       </label>
+                       <Field
+                          as="select"
+                          name="gender"
+                          className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-gray-700"
+                       >
+                         <option value="male">{strings.OPTION_MALE}</option>
+                         <option value="female">{strings.OPTION_FEMALE}</option>
+                         <option value="other">{strings.OPTION_OTHER}</option>
+                       </Field>
+                    </div>
+                  </div>
+
+                  {/* Date of Birth */}
+                  <div className="flex gap-3 items-start">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <Calendar className="text-blue-500 w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                       <label className="text-sm font-medium text-gray-700 block mb-1">
+                         {strings.LABEL_DOB}
+                       </label>
+                       <Field
+                          type="date"
+                          name="dateOfBirth"
+                          className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-gray-700"
+                       />
+                    </div>
+                  </div>
+
+                  {/* Experience */}
+                  <div className="flex gap-3 items-start">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <Briefcase className="text-blue-500 w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                       <label className="text-sm font-medium text-gray-700 block mb-1">
+                         {strings.LABEL_EXPERIENCE}
+                       </label>
+                       <Field
+                          type="number"
+                          name="experience"
+                          placeholder={strings.PLACEHOLDER_EXPERIENCE}
+                          className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                       />
+                    </div>
+                  </div>
+
+                  {/* Languages */}
+                  <div className="flex gap-3 items-start">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <Globe className="text-blue-500 w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                       <label className="text-sm font-medium text-gray-700 block mb-1">
+                         {strings.LABEL_LANGUAGES}
+                       </label>
+                       <Field
+                          type="text"
+                          name="languages"
+                          placeholder={strings.PLACEHOLDER_LANGUAGES}
+                          className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                       />
+                    </div>
+                  </div>
+
+                  {/* Qualification */}
+                  <div className="flex gap-3 items-start col-span-1 md:col-span-2">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <GraduationCap className="text-blue-500 w-5 h-5" />
+                    </div>
+                    <div className="flex-1 grid grid-cols-2 gap-4">
+                       <div>
+                         <label className="text-sm font-medium text-gray-700 block mb-1">{strings.LABEL_DEGREE}</label>
+                         <Field
+                            name="qualification.degree"
+                            placeholder={strings.PLACEHOLDER_DEGREE}
+                            className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                         />
+                       </div>
+                       <div>
+                         <label className="text-sm font-medium text-gray-700 block mb-1">{strings.LABEL_GRAD_YEAR}</label>
+                         <Field
+                            type="number"
+                            name="qualification.year"
+                            placeholder={strings.PLACEHOLDER_YEAR}
+                            className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                         />
+                       </div>
+                    </div>
+                  </div>
+
+                  {/* Address */}
+                  <div className="flex gap-3 items-start col-span-1 md:col-span-2">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <MapPin className="text-blue-500 w-5 h-5" />
+                    </div>
+                    <div className="flex-1 grid grid-cols-2 gap-4">
+                       <div>
+                         <label className="text-sm font-medium text-gray-700 block mb-1">{strings.LABEL_CITY}</label>
+                         <Field
+                            name="address.city"
+                            placeholder={strings.PLACEHOLDER_CITY}
+                            className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                         />
+                       </div>
+                       <div>
+                         <label className="text-sm font-medium text-gray-700 block mb-1">{strings.LABEL_COUNTRY}</label>
+                         <Field
+                            name="address.country"
+                            placeholder={strings.PLACEHOLDER_COUNTRY}
+                            className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                         />
+                       </div>
+                    </div>
+                  </div>
+
+                  {/* Work Experience */}
+                  <div className="flex gap-3 items-start col-span-1 md:col-span-2">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <Briefcase className="text-blue-500 w-5 h-5" />
+                    </div>
+                    <div className="flex-1 grid grid-cols-2 gap-4">
+                       <div>
+                         <label className="text-sm font-medium text-gray-700 block mb-1">{strings.LABEL_COMPANY}</label>
+                         <Field
+                            name="work.company"
+                            placeholder={strings.PLACEHOLDER_COMPANY}
+                            className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                         />
+                       </div>
+                       <div>
+                         <label className="text-sm font-medium text-gray-700 block mb-1">{strings.LABEL_JOB_TITLE}</label>
+                         <Field
+                            name="work.title"
+                            placeholder={strings.PLACEHOLDER_TITLE}
+                            className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                         />
+                       </div>
                     </div>
                   </div>
 

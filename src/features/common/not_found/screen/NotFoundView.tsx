@@ -1,5 +1,4 @@
 'use client';
-import { ROUTES } from '@/features/common/constants/routes';
 /**
  * NotFoundView component.
  * Renders the 404 custom page for the application.
@@ -10,6 +9,7 @@ import Link from 'next/link';
 import { SearchX } from 'lucide-react';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { NOT_FOUND_STRINGS } from '../constants';
+import { ROUTES } from '@/features/common/constants/routes';
 
 export function NotFoundView() {
   const { language } = useLanguage();
