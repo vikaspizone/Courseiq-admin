@@ -15,7 +15,7 @@ let mockUsers: User[] = [
     email: 'john@example.com',
     role_id: '1',
     is_active: true,
-    createdAt: new Date().toISOString(),
+    created_at: new Date().toISOString(),
   },
   {
     id: '2',
@@ -23,7 +23,7 @@ let mockUsers: User[] = [
     email: 'jane@example.com',
     role_id: '2',
     is_active: true,
-    createdAt: new Date().toISOString(),
+    created_at: new Date().toISOString(),
   },
 ];
 
@@ -49,12 +49,12 @@ export const getUserById = async (id: string): Promise<User | undefined> => {
   });
 };
 
-export const createUser = (user: Omit<User, 'id' | 'createdAt' | 'role'>): Promise<User> => {
+export const createUser = (user: Omit<User, 'id' | 'created_at' | 'role'>): Promise<User> => {
   return new Promise((resolve) => {
     const newUser: User = {
       ...user,
       id: Math.random().toString(36).substr(2, 9),
-      createdAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
     };
     mockUsers.push(newUser);
     setTimeout(() => resolve(newUser), 500);

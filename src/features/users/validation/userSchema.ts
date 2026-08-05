@@ -14,8 +14,7 @@ export const userValidationSchema = Yup.object().shape({
   profile_image: Yup.string(),
   password: Yup.string(),
   about: Yup.string(),
-  dateOfBirth: Yup.string(),
-  isActive: Yup.boolean(),
+  date_of_birth: Yup.string(),
   is_active: Yup.boolean(),
   qualification: Yup.object().shape({
     degree: Yup.string(),

@@ -27,9 +27,8 @@ export interface User {
   profile_image?: string;
   password?: string;
   about?: string;
-  dateOfBirth?: string;
+  date_of_birth?: string;
   is_active?: boolean;
-  isActive?: boolean;
   qualification?: UserQualification;
   experience?: number | string;
   languages?: string[];
@@ -40,11 +39,11 @@ export interface User {
     id?: string;
     name: string;
     is_active?: boolean;
-    createdAt?: string;
-    updatedAt?: string;
+    created_at?: string;
+    updated_at?: string;
   };
-  createdAt?: string;
-  updatedAt?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export type UserPayload = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
+export type UserPayload = Omit<User, 'id' | 'created_at' | 'updated_at'>;

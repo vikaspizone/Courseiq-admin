@@ -26,13 +26,13 @@ export const RoleList: React.FC = () => {
 
   // Calculate stats
   const totalRoles = roles.length;
-  // Assume is_active or isActive exists, default to true if undefined for visual
-  const activeRoles = roles.filter(r => r.isActive !== false && r.is_active !== false).length;
+  // Assume is_active exists, default to true if undefined for visual
+  const activeRoles = roles.filter(r => r.is_active !== false).length;
   const inactiveRoles = totalRoles - activeRoles;
   
   const recentlyAdded = roles.filter(r => {
-    if (!r.createdAt) return false;
-    const date = new Date(r.createdAt);
+    if (!r.created_at) return false;
+    const date = new Date(r.created_at);
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     return date > thirtyDaysAgo;
@@ -179,7 +179,7 @@ export const RoleList: React.FC = () => {
                 </tr>
               ) : (
                 filteredRoles.map((role) => {
-                  const isActive = role.isActive !== false && role.is_active !== false;
+                  const is_active = role.is_active !== false;
                   return (
                     <tr key={role.id} className="hover:bg-blue-50/30 transition-colors group">
                       {/* Role Name */}
@@ -199,13 +199,13 @@ export const RoleList: React.FC = () => {
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-                            isActive
+                            is_active
                               ? 'bg-green-50 text-green-700 border border-green-200/60'
                               : 'bg-gray-100 text-gray-600 border border-gray-200'
                           }`}
                         >
-                          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${isActive ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                          {isActive ? 'Active' : 'Inactive'}
+                          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${is_active ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                          {is_active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
 
@@ -215,7 +215,7 @@ export const RoleList: React.FC = () => {
                            <Calendar className="w-4 h-4 text-gray-400" />
                            <div className="flex flex-col">
                              <span className="font-medium text-sm">
-                               {role.createdAt ? new Date(role.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}
+                               {role.created_at ? new Date(role.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}
                              </span>
                            </div>
                         </div>

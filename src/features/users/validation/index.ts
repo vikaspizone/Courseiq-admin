@@ -25,8 +25,7 @@ export const UserSchema = Yup.object().shape({
   about: Yup.string()
     .max(500, 'About text cannot exceed 500 characters')
     .optional(),
-  dateOfBirth: Yup.string(),
-  isActive: Yup.boolean(),
+  date_of_birth: Yup.string(),
   is_active: Yup.boolean(),
   qualification: Yup.object().shape({
     degree: Yup.string(),

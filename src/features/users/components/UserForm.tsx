@@ -57,12 +57,12 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
             name: initialData?.name || '',
             email: initialData?.email || '',
             role_id: initialData?.role_id || '',
-            isActive: initialData?.isActive ?? true,
+            is_active: initialData?.is_active ?? true,
             phone: initialData?.phone || '',
             password: '',
             about: initialData?.about || '',
             gender: initialData?.gender || 'male',
-            dateOfBirth: initialData?.dateOfBirth || '',
+            date_of_birth: initialData?.date_of_birth || '',
             experience: initialData?.experience || 0,
             qualification: {
               degree: initialData?.qualification?.degree || '',
@@ -192,13 +192,13 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                        </label>
                        <Field
                           as="select"
-                          name="isActive"
+                          name="is_active"
                           className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-gray-700"
                        >
                          <option value="true">{strings.STATUS_ACTIVE}</option>
                          <option value="false">{strings.STATUS_INACTIVE}</option>
                        </Field>
-                       <ErrorMessage name="isActive" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                       <ErrorMessage name="is_active" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
                     </div>
                   </div>
 
@@ -293,7 +293,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                        </label>
                        <Field
                           type="date"
-                          name="dateOfBirth"
+                          name="date_of_birth"
                           className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-gray-700"
                        />
                     </div>

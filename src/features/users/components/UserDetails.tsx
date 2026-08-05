@@ -79,7 +79,7 @@ export const UserDetails: React.FC<UserDetailsProps> = ({ user }) => {
                       <UserIcon className="w-16 h-16 text-blue-500" />
                    )}
                    {/* Status Indicator */}
-                   <div className={`absolute bottom-2 right-2 w-5 h-5 rounded-full border-4 border-white ${user.is_active || user.isActive ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                   <div className={`absolute bottom-2 right-2 w-5 h-5 rounded-full border-4 border-white ${user.is_active || user.is_active ? 'bg-green-500' : 'bg-gray-400'}`}></div>
                 </div>
               </div>
               
@@ -110,11 +110,11 @@ export const UserDetails: React.FC<UserDetailsProps> = ({ user }) => {
                      <p className="text-xs font-medium text-gray-500">Account Status</p>
                      <div className="mt-1">
                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                          user.is_active || user.isActive
+                          user.is_active || user.is_active
                             ? 'bg-green-100 text-green-700'
                             : 'bg-gray-100 text-gray-700'
                         }`}>
-                         {user.is_active || user.isActive ? strings.STATUS_ACTIVE : strings.STATUS_INACTIVE}
+                         {user.is_active || user.is_active ? strings.STATUS_ACTIVE : strings.STATUS_INACTIVE}
                        </span>
                      </div>
                    </div>
@@ -137,7 +137,7 @@ export const UserDetails: React.FC<UserDetailsProps> = ({ user }) => {
                    <div>
                      <p className="text-xs font-medium text-gray-500">{strings.LABEL_CREATED}</p>
                      <p className="text-sm font-semibold text-gray-900">
-                       {new Date(user.createdAt || new Date()).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} &bull; {new Date(user.createdAt || new Date()).toLocaleTimeString('en-US')}
+                       {new Date(user.created_at || new Date()).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} &bull; {new Date(user.created_at || new Date()).toLocaleTimeString('en-US')}
                      </p>
                    </div>
                 </div>
@@ -214,11 +214,11 @@ export const UserDetails: React.FC<UserDetailsProps> = ({ user }) => {
                        <p className="text-xs font-medium text-gray-500">Status</p>
                        <div className="mt-1">
                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                            user.is_active || user.isActive
+                            user.is_active || user.is_active
                               ? 'bg-green-100 text-green-700'
                               : 'bg-red-50 text-red-600'
                           }`}>
-                           {user.is_active || user.isActive ? 'Active' : 'Inactive'}
+                           {user.is_active || user.is_active ? 'Active' : 'Inactive'}
                          </span>
                        </div>
                      </div>
@@ -241,7 +241,7 @@ export const UserDetails: React.FC<UserDetailsProps> = ({ user }) => {
                      <div>
                        <p className="text-xs font-medium text-gray-500">Created At</p>
                        <p className="text-sm font-semibold text-gray-900 mt-0.5">
-                          {new Date(user.createdAt || new Date()).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} &bull; {new Date(user.createdAt || new Date()).toLocaleTimeString('en-US')}
+                          {new Date(user.created_at || new Date()).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} &bull; {new Date(user.created_at || new Date()).toLocaleTimeString('en-US')}
                        </p>
                      </div>
                   </div>
@@ -263,7 +263,7 @@ export const UserDetails: React.FC<UserDetailsProps> = ({ user }) => {
                      <div>
                        <p className="text-xs font-medium text-gray-500">{strings.LABEL_DOB}</p>
                        <p className="text-sm font-semibold text-gray-900 mt-0.5">
-                         {user.dateOfBirth ? new Date(user.dateOfBirth).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}
+                         {user.date_of_birth ? new Date(user.date_of_birth).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}
                        </p>
                      </div>
                   </div>

@@ -12,11 +12,11 @@ export function useRoleForm(initialData?: Role) {
   const router = useRouter();
   const isEditing = !!initialData;
 
-  const handleSubmit = async (values: { name: string; description?: string; isActive?: boolean; is_active?: boolean }, { setSubmitting }: any) => {
+  const handleSubmit = async (values: { name: string; description?: string; is_active?: boolean }, { setSubmitting }: any) => {
     try {
       const payload = { 
         name: values.name, 
-        isActive: values.isActive === true || String(values.isActive) === 'true'
+        is_active: values.is_active === true || String(values.is_active) === 'true'
       };
       if (isEditing && initialData?.id) {
         await updateRole(initialData.id, payload);

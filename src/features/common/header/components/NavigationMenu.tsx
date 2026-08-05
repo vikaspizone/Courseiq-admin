@@ -57,14 +57,14 @@ export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
           {NAVIGATION_ITEMS.map((item) => {
             const Icon = item.icon;
             const href = `/${item.id}`;
-            const isActive = pathname?.startsWith(href);
+            const is_active = pathname?.startsWith(href);
             
             return (
               <Link 
                 key={item.id}
                 href={href} 
                 className={`flex items-center ${isOpen ? 'justify-start px-4' : 'justify-center px-0'} py-3 text-[15px] font-medium rounded-xl transition-colors group relative ${
-                  isActive 
+                  is_active 
                     ? "text-blue-600 bg-blue-50/50" 
                     : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
                 }`} 

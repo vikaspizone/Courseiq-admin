@@ -6,9 +6,9 @@
 import { Permission } from '../types';
 
 let mockPermissions: Permission[] = [
-  { id: '1', name: 'Manage Users', description: 'Can add, edit, and delete users', createdAt: '2026-01-15T10:00:00Z' },
-  { id: '2', name: 'Manage Roles', description: 'Can add, edit, and delete roles', createdAt: '2026-02-20T14:30:00Z' },
-  { id: '3', name: 'View Reports', description: 'Can view analytics and reports', createdAt: '2026-03-05T09:15:00Z' },
+  { id: '1', name: 'Manage Users', description: 'Can add, edit, and delete users', created_at: '2026-01-15T10:00:00Z' },
+  { id: '2', name: 'Manage Roles', description: 'Can add, edit, and delete roles', created_at: '2026-02-20T14:30:00Z' },
+  { id: '3', name: 'View Reports', description: 'Can view analytics and reports', created_at: '2026-03-05T09:15:00Z' },
 ];
 
 export const getPermissions = async (): Promise<Permission[]> => {
@@ -23,13 +23,13 @@ export const getPermissionById = async (id: string): Promise<Permission | undefi
   });
 };
 
-export const createPermission = async (data: Omit<Permission, 'id' | 'createdAt'>): Promise<Permission> => {
+export const createPermission = async (data: Omit<Permission, 'id' | 'created_at'>): Promise<Permission> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const newPermission: Permission = {
         ...data,
         id: Math.random().toString(36).substring(7),
-        createdAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
       };
       mockPermissions.push(newPermission);
       resolve(newPermission);

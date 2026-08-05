@@ -7,5 +7,5 @@ export interface Permission {
   id: string;
   name: string;
   description: string;
-  createdAt: string;
+  created_at: string;
 }

@@ -84,8 +84,8 @@ export function useAuth() {
       if (token) {
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("userEmail", payload.user?.email || email);
-        if (payload.refreshToken) {
-          sessionStorage.setItem("refreshToken", payload.refreshToken);
+        if (payload.refresh_token) {
+          sessionStorage.setItem("refresh_token", payload.refresh_token);
         }
         router.push(ROUTES.DASHBOARD);
       } else {

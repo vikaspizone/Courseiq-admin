@@ -63,7 +63,7 @@ export const PermissionList: React.FC = () => {
                     <td className="px-6 py-4 font-medium text-gray-900">{permission.name}</td>
                     <td className="px-6 py-4 text-gray-500">{permission.description}</td>
                     <td className="px-6 py-4 text-gray-500">
-                      {new Date(permission.createdAt).toLocaleDateString()}
+                      {new Date(permission.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
                       <Link

@@ -61,7 +61,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
             initialValues={{
               name: initialData?.name || '',
               description: initialData?.description || '',
-              isActive: initialData?.isActive ?? initialData?.is_active ?? true,
+              is_active: initialData?.is_active ?? true,
             }}
             validationSchema={RoleSchema}
             onSubmit={handleSubmit}
@@ -117,13 +117,13 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
                       </label>
                       <Field
                          as="select"
-                         name="isActive"
+                         name="is_active"
                          className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-gray-700"
                       >
                         <option value="true">Active</option>
                         <option value="false">Inactive</option>
                       </Field>
-                      <ErrorMessage name="isActive" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                      <ErrorMessage name="is_active" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
                    </div>
                  </div>
 

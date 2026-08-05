@@ -22,7 +22,7 @@ export const getRoleById = async (id: string): Promise<Role> => {
   return data.data || data;
 };
 
-export const createRole = async (roleData: Omit<Role, 'id' | 'createdAt'>): Promise<Role> => {
+export const createRole = async (roleData: Omit<Role, 'id' | 'created_at'>): Promise<Role> => {
   const response = await fetchWithAuth('/roles', {
     method: 'POST',
     body: JSON.stringify(roleData),

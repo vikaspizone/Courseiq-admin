@@ -32,7 +32,7 @@ export function useUserForm(initialData?: User) {
     try {
       const payload = {
         ...values,
-        isActive: values.isActive === true || String(values.isActive) === 'true',
+        is_active: values.is_active === true || String(values.is_active) === 'true',
         experience: values.experience ? Number(values.experience) : 0,
         languages: typeof values.languages === 'string' ? values.languages.split(',').map((l: string) => l.trim()).filter(Boolean) : values.languages,
         qualification: values.qualification ? {

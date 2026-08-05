@@ -26,14 +26,14 @@ export const UserList: React.FC = () => {
 
   // Calculate stats
   const totalUsers = users.length;
-  const activeUsers = users.filter(u => u.isActive || u.is_active).length;
+  const activeUsers = users.filter(u => u.is_active || u.is_active).length;
   
   // Safe roles extraction to prevent errors if role object is undefined
   const rolesCount = new Set(users.map(u => u.role_id || u.name).filter(Boolean)).size;
 
   const recentlyAdded = users.filter(u => {
-    if (!u.createdAt) return false;
-    const date = new Date(u.createdAt);
+    if (!u.created_at) return false;
+    const date = new Date(u.created_at);
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     return date > thirtyDaysAgo;
@@ -232,13 +232,13 @@ export const UserList: React.FC = () => {
                     <td className="px-6 py-4">
                       <span
                         className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-                          user.isActive || user.is_active
+                          user.is_active || user.is_active
                             ? 'bg-green-50 text-green-700 border border-green-200/60'
                             : 'bg-gray-100 text-gray-600 border border-gray-200'
                         }`}
                       >
-                        <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${user.isActive || user.is_active ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                        {user.isActive || user.is_active ? 'Active' : 'Inactive'}
+                        <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${user.is_active || user.is_active ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                        {user.is_active || user.is_active ? 'Active' : 'Inactive'}
 
                       </span>
                     </td>
@@ -249,10 +249,10 @@ export const UserList: React.FC = () => {
                          <Calendar className="w-4 h-4 text-gray-400" />
                          <div className="flex flex-col">
                            <span className="font-medium text-sm">
-                             {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}
+                             {user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}
                            </span>
                            <span className="text-[11px] text-gray-400">
-                             {user.createdAt ? new Date(user.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' }) : ''}
+                             {user.created_at ? new Date(user.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' }) : ''}
                            </span>
                          </div>
                       </div>
