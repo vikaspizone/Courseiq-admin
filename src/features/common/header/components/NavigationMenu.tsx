@@ -4,13 +4,14 @@
  * Renders the collapsible sidebar navigation menu with mapped items.
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GraduationCap, ChevronLeft } from "lucide-react";
+import { GraduationCap, ChevronLeft, Loader2 } from "lucide-react";
 import { HEADER_STRINGS } from "../constants";
 import { NAVIGATION_ITEMS } from "../constants/navigationConfig";
 import { useLanguage } from "../../lang/contexts/LanguageContext";
+import { useModuleList } from "@/features/modules/hooks/useModuleList";
 
 interface NavigationMenuProps {
   isOpen: boolean;
@@ -21,6 +22,22 @@ export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
   const { language } = useLanguage();
   const strings = HEADER_STRINGS[language];
   const pathname = usePathname();
+  
+  const { modules, loading: isLoading } = useModuleList();
+
+  const activeModules = useMemo(() => {
+    return modules
+      .filter((m) => m.is_active)
+      .map((m) => {
+        const enTranslation = m.translations?.find(t => t.languageCode === 'en');
+        return enTranslation?.name || m.name || '';
+      });
+  }, [modules]);
+
+  const filteredItems = NAVIGATION_ITEMS.filter(item => {
+    const englishName = HEADER_STRINGS.en[item.translationKey];
+    return activeModules.includes(englishName);
+  });
 
   return (
     <div className={`flex-shrink-0 bg-white h-full flex flex-col z-50 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'} shadow-[4px_0_24px_rgba(0,0,0,0.02)]`}>
@@ -54,46 +71,56 @@ export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
 
         {/* Navigation Links */}
         <nav className="flex flex-col gap-1.5 px-4">
-          {NAVIGATION_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const href = `/${item.id}`;
-            const is_active = pathname?.startsWith(href);
-            
-            return (
-              <Link 
-                key={item.id}
-                href={href} 
-                className={`flex items-center ${isOpen ? 'justify-start px-4' : 'justify-center px-0'} py-3 text-[15px] font-medium rounded-xl transition-colors group relative ${
-                  is_active 
-                    ? "text-blue-600 bg-blue-50/50" 
-                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
-                }`} 
-                title={strings[item.translationKey]}
-              >
-                {item.hasRedDot ? (
-                  <div className="relative">
+          {isLoading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+            </div>
+          ) : filteredItems.length === 0 ? (
+            <div className={`text-center py-8 text-sm text-gray-500 ${!isOpen && 'hidden'}`}>
+              No active modules
+            </div>
+          ) : (
+            filteredItems.map((item) => {
+              const Icon = item.icon;
+              const href = `/${item.id}`;
+              const is_active = pathname?.startsWith(href);
+              
+              return (
+                <Link 
+                  key={item.id}
+                  href={href} 
+                  className={`flex items-center ${isOpen ? 'justify-start px-4' : 'justify-center px-0'} py-3 text-[15px] font-medium rounded-xl transition-colors group relative ${
+                    is_active 
+                      ? "text-blue-600 bg-blue-50/50" 
+                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                  }`} 
+                  title={strings[item.translationKey]}
+                >
+                  {item.hasRedDot ? (
+                    <div className="relative">
+                      <Icon className="h-[22px] w-[22px] flex-shrink-0" />
+                      <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></div>
+                    </div>
+                  ) : (
                     <Icon className="h-[22px] w-[22px] flex-shrink-0" />
-                    <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></div>
-                  </div>
-                ) : (
-                  <Icon className="h-[22px] w-[22px] flex-shrink-0" />
-                )}
-                
-                {isOpen && (
-                  <>
-                    <span className={`ml-3.5 whitespace-nowrap ${item.badge ? 'flex-1' : ''}`}>
-                      {strings[item.translationKey]}
-                    </span>
-                    {item.badge && (
-                      <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
-                        {item.badge}
+                  )}
+                  
+                  {isOpen && (
+                    <>
+                      <span className={`ml-3.5 whitespace-nowrap ${item.badge ? 'flex-1' : ''}`}>
+                        {strings[item.translationKey]}
                       </span>
-                    )}
-                  </>
-                )}
-              </Link>
-            );
-          })}
+                      {item.badge && (
+                        <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
+                          {item.badge}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </Link>
+              );
+            })
+          )}
         </nav>
       </div>
     </div>

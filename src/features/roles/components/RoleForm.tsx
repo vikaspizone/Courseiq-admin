@@ -13,6 +13,7 @@ import { ArrowLeft, Save, User, FileText, Shield, Lightbulb, LayoutDashboard, Bo
 import Link from 'next/link';
 import { useRoleForm } from '../hooks/useRoleForm';
 import { usePermissionList } from '@/features/permissions/hooks/usePermissionList';
+import { useModuleList } from '@/features/modules/hooks/useModuleList';
 import { RoleSchema } from '../validation';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { ROLE_STRINGS } from '../constants';
@@ -27,14 +28,8 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
   const { language } = useLanguage();
   const strings = ROLE_STRINGS[language];
   const { permissions: apiPermissions, loading: permissionsLoading } = usePermissionList();
-
-  const permissionsList = [
-    { module: 'Dashboard', icon: LayoutDashboard, view: true, create: false, edit: false, delete: false, manage: false },
-    { module: 'Courses', icon: BookOpen, view: true, create: true, edit: true, delete: true, manage: false },
-    { module: 'Users', icon: Users, view: true, create: true, edit: true, delete: true, manage: false },
-    { module: 'Roles', icon: Shield, view: false, create: false, edit: false, delete: false, manage: true },
-    { module: 'Instructor Directory', icon: UserSquare, view: true, create: false, edit: true, delete: false, manage: false },
-  ];
+  const { modules, loading: modulesLoading } = useModuleList();
+  const activeModules = modules.filter(m => m.is_active);
 
   return (
     <div className="w-full">
@@ -160,26 +155,39 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-100">
-                            {permissionsList.map((perm, idx) => (
-                              <tr key={idx} className="bg-white">
-                                <td className="px-4 py-3 flex items-center gap-2 font-medium text-gray-700">
-                                  <perm.icon className="w-4 h-4 text-gray-400" />
-                                  {perm.module}
-                                </td>
-                                {permissionsLoading ? (
-                                  <td className="px-4 py-3 text-center">...</td>
-                                ) : (
-                                  apiPermissions.map((p) => (
-                                    <td key={p.id} className="px-4 py-3 text-center">
-                                        <input 
-                                          type="checkbox" 
-                                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                        />
+                            {modulesLoading ? (
+                              <tr><td colSpan={10} className="px-4 py-8 text-center text-gray-500">Loading modules...</td></tr>
+                            ) : activeModules.length === 0 ? (
+                              <tr><td colSpan={10} className="px-4 py-8 text-center text-gray-500">No active modules found</td></tr>
+                            ) : (
+                              activeModules.map((module) => {
+                                const moduleName = module.translations?.find(t => t.languageCode === language)?.name 
+                                  || module.translations?.[0]?.name 
+                                  || module.name 
+                                  || 'Unnamed';
+                                  
+                                return (
+                                  <tr key={module.id} className="bg-white">
+                                    <td className="px-4 py-3 flex items-center gap-2 font-medium text-gray-700">
+                                      <LayoutDashboard className="w-4 h-4 text-gray-400" />
+                                      {moduleName}
                                     </td>
-                                  ))
-                                )}
-                              </tr>
-                            ))}
+                                    {permissionsLoading ? (
+                                      <td className="px-4 py-3 text-center">...</td>
+                                    ) : (
+                                      apiPermissions.map((p) => (
+                                        <td key={p.id} className="px-4 py-3 text-center">
+                                            <input 
+                                              type="checkbox" 
+                                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                            />
+                                        </td>
+                                      ))
+                                    )}
+                                  </tr>
+                                );
+                              })
+                            )}
                           </tbody>
                         </table>
                      </div>

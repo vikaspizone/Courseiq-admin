@@ -11,6 +11,8 @@ export const ROUTES = {
   INSTRUCTOR_DIRECTORY: '/instructor-directory',
   PERMISSION: '/permission',
   PERMISSION_CREATE: '/permission/create',
+  MODULE: '/module',
+  MODULE_CREATE: '/module/create',
   ROLE: '/role',
   ROLE_CREATE: '/role/create',
   USER: '/user',
