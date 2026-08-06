@@ -11,6 +11,7 @@ import { Module } from '../types';
 import { ArrowLeft, Save, Key, FileText, Lightbulb, LayoutDashboard, BookOpen, Users, Shield, UserSquare } from 'lucide-react';
 import Link from 'next/link';
 import { useModuleForm } from '../hooks/useModuleForm';
+import { useModuleList } from '../hooks/useModuleList';
 import { getCreateModuleSchema, getUpdateModuleSchema } from '../validation';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { MODULE_STRINGS } from '../constants';
@@ -22,8 +23,45 @@ interface ModuleFormProps {
 
 export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
   const { isEditing, handleSubmit } = useModuleForm(initialData);
+  const { modules, loading } = useModuleList();
   const { language } = useLanguage();
   const strings = MODULE_STRINGS[language];
+
+  const allRoutes = Object.values(ROUTES);
+  
+  const createdModuleRoutes = modules.map(m => {
+    if (m.route) {
+      let r = m.route.toLowerCase();
+      return r.startsWith('/') ? r : '/' + r;
+    }
+    // Fallback for older modules
+    let val = m.name || '';
+    if (!val && m.translations) {
+      const en = m.translations.find(t => t.languageCode === 'en');
+      if (en) val = en.name;
+    }
+    if (val) {
+      let slug = val.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/[\s_]+/g, '-').toLowerCase();
+      if (slug.endsWith('ies')) {
+        slug = slug.slice(0, -3) + 'y';
+      } else if (slug.endsWith('s') && !slug.endsWith('ss')) {
+        slug = slug.slice(0, -1);
+      }
+      return '/' + slug;
+    }
+    return '';
+  }).filter(Boolean);
+
+  const unassignedRoutes = allRoutes.filter(route => {
+    if (route.startsWith('/auth')) return false;
+    let normalizedRoute = route.toLowerCase();
+    if (!normalizedRoute.startsWith('/')) normalizedRoute = '/' + normalizedRoute;
+    
+    const isAssigned = createdModuleRoutes.some(createdRoute => 
+      normalizedRoute === createdRoute || normalizedRoute.startsWith(createdRoute + '/')
+    );
+    return !isAssigned;
+  });
 
   // Dummy modules list just to show some checkboxes like role form
   const modulesList = [
@@ -71,6 +109,8 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
               name_en: initNameEn,
               name_hi: initNameHi,
               is_active: initialData?.is_active ?? true,
+              icon: initialData?.icon || '',
+              route: initialData?.route || '',
             }}
             validationSchema={isEditing ? getUpdateModuleSchema(strings) : getCreateModuleSchema(strings)}
             onSubmit={handleSubmit}
@@ -88,11 +128,31 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
                        <label className="text-sm font-medium text-gray-700 block mb-1">
                          {strings.LABEL_NAME} (English) <span className="text-red-500">*</span>
                        </label>
-                       <Field
-                          name="name_en"
-                          placeholder={strings.PLACEHOLDER_NAME}
-                          className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                       />
+                       <Field name="name_en">
+                         {({ field, form }: any) => (
+                           <input
+                             {...field}
+                             placeholder={strings.PLACEHOLDER_NAME}
+                             className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                             onChange={(e) => {
+                               field.onChange(e);
+                               const val = e.target.value;
+                               if (val) {
+                                 let slug = val.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/[\s_]+/g, '-').toLowerCase();
+                                 if (slug.endsWith('ies')) {
+                                   slug = slug.slice(0, -3) + 'y';
+                                 } else if (slug.endsWith('s') && !slug.endsWith('ss')) {
+                                   slug = slug.slice(0, -1);
+                                 }
+                                 const autoRoute = '/' + slug;
+                                 form.setFieldValue('route', autoRoute);
+                               } else {
+                                 form.setFieldValue('route', '');
+                               }
+                             }}
+                           />
+                         )}
+                       </Field>
                        <ErrorMessage name="name_en" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
                     </div>
                   </div>
@@ -112,6 +172,46 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
                           className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                        />
                        <ErrorMessage name="name_hi" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Icon & Route */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Icon */}
+                  <div className="flex gap-4 items-start">
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <FileText className="text-blue-500 w-6 h-6" />
+                    </div>
+                    <div className="flex-1">
+                       <label className="text-sm font-medium text-gray-700 block mb-1">
+                         {strings.LABEL_ICON}
+                       </label>
+                       <Field
+                          name="icon"
+                          placeholder="e.g. LayoutDashboard"
+                          className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                       />
+                       <ErrorMessage name="icon" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                    </div>
+                  </div>
+
+                  {/* Route */}
+                  <div className="flex gap-4 items-start">
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <FileText className="text-blue-500 w-6 h-6" />
+                    </div>
+                    <div className="flex-1">
+                       <label className="text-sm font-medium text-gray-700 block mb-1">
+                         {strings.LABEL_ROUTE}
+                       </label>
+                       <Field
+                          name="route"
+                          placeholder="e.g. /dashboard"
+                          readOnly
+                          className="flex h-10 w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500 cursor-not-allowed placeholder:text-gray-400 focus-visible:outline-none"
+                       />
+                       <ErrorMessage name="route" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
                     </div>
                   </div>
                 </div>
@@ -192,8 +292,10 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
           </Formik>
         </div>
 
-        {/* Tips Sidebar */}
-        <div className="w-full lg:w-80 bg-white p-6 rounded-xl shadow-sm border border-gray-100 shrink-0">
+        {/* Right Sidebar */}
+        <div className="w-full lg:w-80 space-y-6 shrink-0">
+          {/* Tips Sidebar */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <div className="flex items-center gap-2 mb-4 text-blue-600 font-medium">
             <Lightbulb className="w-5 h-5" />
             {strings.TIPS}
@@ -203,6 +305,31 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
             <li>{strings.TIP_2}</li>
             <li>{strings.TIP_3}</li>
           </ul>
+          </div>
+
+          {/* Unassigned Routes Sidebar */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center gap-2 mb-4 text-blue-600 font-medium">
+              <FileText className="w-5 h-5" />
+              {strings.UNASSIGNED_ROUTES}
+            </div>
+            {loading ? (
+              <p className="text-sm text-gray-500 animate-pulse">{strings.LOADING_ROUTES}</p>
+            ) : unassignedRoutes.length > 0 ? (
+              <div className="max-h-[300px] overflow-y-auto pr-2 space-y-2 custom-scrollbar">
+                {unassignedRoutes.map((route, idx) => (
+                  <div key={idx} className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50 border border-transparent hover:border-gray-100 transition-colors">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+                    <code className="text-xs bg-gray-50 px-1.5 py-0.5 rounded text-gray-700 font-mono break-all">
+                      {route}
+                    </code>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">{strings.ALL_ROUTES_ASSIGNED}</p>
+            )}
+          </div>
         </div>
 
       </div>

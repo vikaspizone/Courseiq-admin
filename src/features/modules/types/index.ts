@@ -14,6 +14,8 @@ export interface Module {
   id: string;
   name?: string;
   is_active?: boolean;
+  icon?: string;
+  route?: string;
   translations?: Translation[];
   created_at: string;
   updated_at?: string;
@@ -21,6 +23,8 @@ export interface Module {
 
 export interface ModulePayload {
   is_active: boolean;
+  icon?: string;
+  route?: string;
   translations: {
     languageCode: string;
     name: string;

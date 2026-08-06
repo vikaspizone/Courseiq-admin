@@ -46,6 +46,7 @@ export const ModuleList: React.FC = () => {
               <tr>
                 <th className="px-6 py-4">{strings.TH_NAME}</th>
                 <th className="px-6 py-4">{strings.TH_STATUS}</th>
+                <th className="px-6 py-4">{strings.TH_ROUTE}</th>
                 <th className="px-6 py-4">{strings.TH_CREATED}</th>
                 <th className="px-6 py-4 text-right">{strings.TH_ACTIONS}</th>
               </tr>
@@ -53,7 +54,7 @@ export const ModuleList: React.FC = () => {
             <tbody className="divide-y divide-gray-100">
               {modules.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
                     {strings.NO_MODULES}
                   </td>
                 </tr>
@@ -72,6 +73,15 @@ export const ModuleList: React.FC = () => {
                           className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${module.is_active ? 'translate-x-4' : 'translate-x-1'}`}
                         />
                       </button>
+                    </td>
+                    <td className="px-6 py-4">
+                      {module.route ? (
+                        <span className="inline-flex text-green-700 bg-green-50 px-2.5 py-1 rounded-md text-xs font-mono font-medium border border-green-200 shadow-sm">
+                          {module.route}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400 text-sm">-</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-gray-500">
                       {new Date(module.created_at).toLocaleDateString()}

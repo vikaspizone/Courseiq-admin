@@ -12,10 +12,12 @@ export function useModuleForm(initialData?: Module) {
   const router = useRouter();
   const isEditing = !!initialData;
 
-  const handleSubmit = async (values: { name_en: string; name_hi: string; is_active?: boolean }, { setSubmitting }: any) => {
+  const handleSubmit = async (values: { name_en: string; name_hi: string; is_active?: boolean; icon?: string; route?: string }, { setSubmitting }: any) => {
     try {
       const payload: ModulePayload = {
         is_active: values.is_active ?? true,
+        icon: values.icon,
+        route: values.route,
         translations: [
           {
             languageCode: 'en',

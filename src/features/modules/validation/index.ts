@@ -15,6 +15,8 @@ export const getCreateModuleSchema = (strings: any) => Yup.object().shape({
     .max(50, strings.ERR_NAME_MAX || 'Name is too long!')
     .optional(),
   is_active: Yup.boolean().optional(),
+  icon: Yup.string().optional(),
+  route: Yup.string().optional(),
 });
 
 export const getUpdateModuleSchema = (strings: any) => Yup.object().shape({
@@ -27,6 +29,8 @@ export const getUpdateModuleSchema = (strings: any) => Yup.object().shape({
     .max(50, strings.ERR_NAME_MAX || 'Name is too long!')
     .optional(),
   is_active: Yup.boolean().optional(),
+  icon: Yup.string().optional(),
+  route: Yup.string().optional(),
 });
 
 export const getDeleteModuleSchema = (strings?: any) => Yup.object().shape({
