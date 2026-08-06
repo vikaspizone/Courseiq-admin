@@ -12,6 +12,7 @@ import { Role } from '../types';
 import { ArrowLeft, Save, User, FileText, Shield, Lightbulb, LayoutDashboard, BookOpen, Users, UserSquare, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { useRoleForm } from '../hooks/useRoleForm';
+import { usePermissionList } from '@/features/permissions/hooks/usePermissionList';
 import { RoleSchema } from '../validation';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { ROLE_STRINGS } from '../constants';
@@ -25,6 +26,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
   const { isEditing, handleSubmit } = useRoleForm(initialData);
   const { language } = useLanguage();
   const strings = ROLE_STRINGS[language];
+  const { permissions: apiPermissions, loading: permissionsLoading } = usePermissionList();
 
   const permissionsList = [
     { module: 'Dashboard', icon: LayoutDashboard, view: true, create: false, edit: false, delete: false, manage: false },
@@ -146,11 +148,15 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
                           <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 font-medium">
                             <tr>
                               <th className="px-4 py-3">{strings.TH_MODULE}</th>
-                              <th className="px-4 py-3 text-center">{strings.TH_VIEW}</th>
-                              <th className="px-4 py-3 text-center">{strings.TH_CREATE}</th>
-                              <th className="px-4 py-3 text-center">{strings.TH_EDIT}</th>
-                              <th className="px-4 py-3 text-center">{strings.TH_DELETE}</th>
-                              <th className="px-4 py-3 text-center">{strings.TH_MANAGE}</th>
+                              {permissionsLoading ? (
+                                <th className="px-4 py-3 text-center text-gray-400">Loading...</th>
+                              ) : (
+                                apiPermissions.map((p) => (
+                                  <th key={p.id} className="px-4 py-3 text-center">
+                                    {p.name || (p.translations && p.translations.length > 0 ? p.translations[0].name : 'Unnamed')}
+                                  </th>
+                                ))
+                              )}
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-100">
@@ -160,15 +166,18 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
                                   <perm.icon className="w-4 h-4 text-gray-400" />
                                   {perm.module}
                                 </td>
-                                {['view', 'create', 'edit', 'delete', 'manage'].map((action) => (
-                                  <td key={action} className="px-4 py-3 text-center">
-                                      <input 
-                                        type="checkbox" 
-                                        defaultChecked={(perm as any)[action] === true}
-                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                      />
-                                  </td>
-                                ))}
+                                {permissionsLoading ? (
+                                  <td className="px-4 py-3 text-center">...</td>
+                                ) : (
+                                  apiPermissions.map((p) => (
+                                    <td key={p.id} className="px-4 py-3 text-center">
+                                        <input 
+                                          type="checkbox" 
+                                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                        />
+                                    </td>
+                                  ))
+                                )}
                               </tr>
                             ))}
                           </tbody>

@@ -31,6 +31,10 @@ export const PERMISSION_STRINGS = {
     TIP_1: "Use clear, descriptive names for permissions.",
     TIP_2: "Group related permissions together.",
     TIP_3: "Don't create overly granular permissions unless necessary.",
+    ERR_NAME_MIN: "Name must be at least 2 characters",
+    ERR_NAME_MAX: "Name cannot exceed 50 characters",
+    ERR_NAME_REQ: "Permission Name is required",
+    ERR_DESC_MAX: "Description cannot exceed 500 characters",
   },
   hi: {
     TITLE: "अनुमतियां (Permissions)",
@@ -59,5 +63,9 @@ export const PERMISSION_STRINGS = {
     TIP_1: "अनुमतियों के लिए स्पष्ट, वर्णनात्मक नामों का उपयोग करें।",
     TIP_2: "संबंधित अनुमतियों को एक साथ समूहित करें।",
     TIP_3: "अनावश्यक रूप से दानेदार अनुमतियां न बनाएं।",
+    ERR_NAME_MIN: "नाम कम से कम 2 अक्षरों का होना चाहिए",
+    ERR_NAME_MAX: "नाम 50 अक्षरों से अधिक नहीं हो सकता",
+    ERR_NAME_REQ: "अनुमति का नाम आवश्यक है",
+    ERR_DESC_MAX: "विवरण 500 अक्षरों से अधिक नहीं हो सकता",
   }
 };

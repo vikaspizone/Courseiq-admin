@@ -11,7 +11,7 @@ import { Permission } from '../types';
 import { ArrowLeft, Save, Key, FileText, Lightbulb, LayoutDashboard, BookOpen, Users, Shield, UserSquare } from 'lucide-react';
 import Link from 'next/link';
 import { usePermissionForm } from '../hooks/usePermissionForm';
-import { PermissionSchema } from '../validation';
+import { getCreatePermissionSchema, getUpdatePermissionSchema } from '../validation';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { PERMISSION_STRINGS } from '../constants';
 import { ROUTES } from '@/features/common/constants/routes';
@@ -33,6 +33,15 @@ export const PermissionForm: React.FC<PermissionFormProps> = ({ initialData }) =
     { module: 'Roles', icon: Shield },
     { module: 'Instructor Directory', icon: UserSquare },
   ];
+
+  const getTranslationName = (langCode: string) => {
+    if (!initialData?.translations) return '';
+    const t = initialData.translations.find(x => x.languageCode === langCode);
+    return t ? t.name : '';
+  };
+
+  const initNameEn = getTranslationName('en') || initialData?.name || '';
+  const initNameHi = getTranslationName('hi') || '';
 
   return (
     <div className="w-full">
@@ -59,57 +68,78 @@ export const PermissionForm: React.FC<PermissionFormProps> = ({ initialData }) =
         <div className="flex-1 bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-100">
           <Formik
             initialValues={{
-              name: initialData?.name || '',
-              description: initialData?.description || '',
+              name_en: initNameEn,
+              name_hi: initNameHi,
+              is_active: initialData?.is_active ?? true,
             }}
-            validationSchema={PermissionSchema}
+            validationSchema={isEditing ? getUpdatePermissionSchema(strings) : getCreatePermissionSchema(strings)}
             onSubmit={handleSubmit}
           >
             {({ isSubmitting }) => (
               <Form className="space-y-8">
                 
-                {/* Permission Name */}
-                <div className="flex gap-4 items-start">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
-                    <Key className="text-blue-500 w-6 h-6" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Permission Name (English) */}
+                  <div className="flex gap-4 items-start">
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <Key className="text-blue-500 w-6 h-6" />
+                    </div>
+                    <div className="flex-1">
+                       <label className="text-sm font-medium text-gray-700 block mb-1">
+                         {strings.LABEL_NAME} (English) <span className="text-red-500">*</span>
+                       </label>
+                       <Field
+                          name="name_en"
+                          placeholder={strings.PLACEHOLDER_NAME}
+                          className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                       />
+                       <ErrorMessage name="name_en" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                    </div>
                   </div>
-                  <div className="flex-1">
-                     <label className="text-sm font-medium text-gray-700 block mb-1">
-                       {strings.LABEL_NAME} <span className="text-red-500">*</span>
-                     </label>
-                     <Field
-                        name="name"
-                        placeholder={strings.PLACEHOLDER_NAME}
-                        className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                     />
-                     <ErrorMessage name="name" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+
+                  {/* Permission Name (Hindi) */}
+                  <div className="flex gap-4 items-start">
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
+                      <Key className="text-blue-500 w-6 h-6" />
+                    </div>
+                    <div className="flex-1">
+                       <label className="text-sm font-medium text-gray-700 block mb-1">
+                         {strings.LABEL_NAME} (Hindi)
+                       </label>
+                       <Field
+                          name="name_hi"
+                          placeholder={strings.PLACEHOLDER_NAME}
+                          className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                       />
+                       <ErrorMessage name="name_hi" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                    </div>
                   </div>
                 </div>
 
-                {/* Description */}
+                {/* Status Selection */}
                 <div className="flex gap-4 items-start">
                   <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
-                    <FileText className="text-blue-500 w-6 h-6" />
+                    <Shield className="text-blue-500 w-6 h-6" />
                   </div>
                   <div className="flex-1">
                      <label className="text-sm font-medium text-gray-700 block mb-1">
-                       {strings.LABEL_DESC}
+                       Status
                      </label>
-                     <Field
-                        as="textarea"
-                        name="description"
-                        rows={3}
-                        placeholder={strings.PLACEHOLDER_DESC}
-                        className="flex w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 resize-none"
-                     />
-                     <ErrorMessage name="description" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
+                     <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors w-max">
+                        <Field
+                          type="checkbox"
+                          name="is_active"
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <span className="text-sm font-medium text-gray-700">Active</span>
+                     </label>
                   </div>
                 </div>
 
                 {/* Modules Selection (Mock) */}
                 <div className="flex gap-4 items-start">
                   <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
-                    <Shield className="text-blue-500 w-6 h-6" />
+                    <LayoutDashboard className="text-blue-500 w-6 h-6" />
                   </div>
                   <div className="flex-1 overflow-hidden">
                      <label className="text-sm font-medium text-gray-700 block mb-1">

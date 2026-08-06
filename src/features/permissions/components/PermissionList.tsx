@@ -45,7 +45,6 @@ export const PermissionList: React.FC = () => {
             <thead className="bg-gray-50/50 text-gray-500 font-medium border-b border-gray-100">
               <tr>
                 <th className="px-6 py-4">{strings.TH_NAME}</th>
-                <th className="px-6 py-4">{strings.TH_DESC}</th>
                 <th className="px-6 py-4">{strings.TH_CREATED}</th>
                 <th className="px-6 py-4 text-right">{strings.TH_ACTIONS}</th>
               </tr>
@@ -53,7 +52,7 @@ export const PermissionList: React.FC = () => {
             <tbody className="divide-y divide-gray-100">
               {permissions.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={3} className="px-6 py-8 text-center text-gray-500">
                     {strings.NO_PERMISSIONS}
                   </td>
                 </tr>
@@ -61,7 +60,6 @@ export const PermissionList: React.FC = () => {
                 permissions.map((permission) => (
                   <tr key={permission.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900">{permission.name}</td>
-                    <td className="px-6 py-4 text-gray-500">{permission.description}</td>
                     <td className="px-6 py-4 text-gray-500">
                       {new Date(permission.created_at).toLocaleDateString()}
                     </td>

@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { Permission } from '../types';
-import { getPermissions, deletePermission } from '../api/mockData';
+import { getPermissions, deletePermission } from '../api';
 
 export function usePermissionList() {
   const [permissions, setPermissions] = useState<Permission[]>([]);
