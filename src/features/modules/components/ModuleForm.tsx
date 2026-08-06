@@ -5,10 +5,10 @@
  * Provides a form for creating and editing modules.
 */
 
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React, { useRef, useState } from 'react';
+import { Formik, Form, Field, ErrorMessage, FormikProps } from 'formik';
 import { Module } from '../types';
-import { ArrowLeft, Save, Key, FileText, Lightbulb, LayoutDashboard, BookOpen, Users, Shield, UserSquare } from 'lucide-react';
+import { ArrowLeft, Save, Key, FileText, Lightbulb, LayoutDashboard, BookOpen, Users, Shield, UserSquare, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useModuleForm } from '../hooks/useModuleForm';
 import { useModuleList } from '../hooks/useModuleList';
@@ -22,6 +22,8 @@ interface ModuleFormProps {
 }
 
 export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
+  const formikRef = useRef<FormikProps<any>>(null);
+  const [isRouteManuallySet, setIsRouteManuallySet] = useState(false);
   const { isEditing, handleSubmit } = useModuleForm(initialData);
   const { modules, loading } = useModuleList();
   const { language } = useLanguage();
@@ -81,6 +83,20 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
   const initNameEn = getTranslationName('en') || initialData?.name || '';
   const initNameHi = getTranslationName('hi') || '';
 
+  const handleAutoFill = (route: string) => {
+    if (formikRef.current) {
+      const namePart = route.replace(/^\//, '');
+      const generatedName = namePart
+        .split(/[-_]/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+      
+      formikRef.current.setFieldValue('name_en', generatedName);
+      formikRef.current.setFieldValue('route', route);
+      setIsRouteManuallySet(true);
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center space-x-2 mb-4">
@@ -97,14 +113,24 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
         <h2 className="text-2xl font-bold text-gray-900">
           {isEditing ? strings.EDIT_TITLE : strings.CREATE_TITLE}
         </h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-500 mt-1 mb-4">
           {isEditing ? strings.EDIT_DESC : strings.CREATE_DESC}
         </p>
+
+        {/* Route Flow Info Banner */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3 text-amber-800">
+          <Lightbulb className="w-5 h-5 shrink-0 mt-0.5 text-amber-600" />
+          <div className="text-sm">
+            <p className="font-semibold mb-1">Route Assignment Flow:</p>
+            <p>The <strong>Route Path</strong> must exactly match your frontend route (e.g., <code>/dashboard</code>). When creating a module, it auto-generates as you type the name, but you can manually edit it. When editing an existing module, the route will not auto-update to prevent breaking existing assignments. <strong className="block mt-1">Note: Route paths must be lowercase, use hyphens (-) instead of spaces, and contain no capital letters.</strong></p>
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 items-start">
         <div className="flex-1 bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-100">
           <Formik
+            innerRef={formikRef}
             initialValues={{
               name_en: initNameEn,
               name_hi: initNameHi,
@@ -136,18 +162,20 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
                              className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                              onChange={(e) => {
                                field.onChange(e);
-                               const val = e.target.value;
-                               if (val) {
-                                 let slug = val.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/[\s_]+/g, '-').toLowerCase();
-                                 if (slug.endsWith('ies')) {
-                                   slug = slug.slice(0, -3) + 'y';
-                                 } else if (slug.endsWith('s') && !slug.endsWith('ss')) {
-                                   slug = slug.slice(0, -1);
+                               if (!isEditing && !isRouteManuallySet) {
+                                 const val = e.target.value;
+                                 if (val) {
+                                   let slug = val.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/[\s_]+/g, '-').toLowerCase();
+                                   if (slug.endsWith('ies')) {
+                                     slug = slug.slice(0, -3) + 'y';
+                                   } else if (slug.endsWith('s') && !slug.endsWith('ss')) {
+                                     slug = slug.slice(0, -1);
+                                   }
+                                   const autoRoute = '/' + slug;
+                                   form.setFieldValue('route', autoRoute);
+                                 } else {
+                                   form.setFieldValue('route', '');
                                  }
-                                 const autoRoute = '/' + slug;
-                                 form.setFieldValue('route', autoRoute);
-                               } else {
-                                 form.setFieldValue('route', '');
                                }
                              }}
                            />
@@ -205,12 +233,19 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
                        <label className="text-sm font-medium text-gray-700 block mb-1">
                          {strings.LABEL_ROUTE}
                        </label>
-                       <Field
-                          name="route"
-                          placeholder="e.g. /dashboard"
-                          readOnly
-                          className="flex h-10 w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500 cursor-not-allowed placeholder:text-gray-400 focus-visible:outline-none"
-                       />
+                       <Field name="route">
+                         {({ field, form }: any) => (
+                           <input
+                             {...field}
+                             placeholder="e.g. /dashboard"
+                             className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                             onChange={(e) => {
+                               field.onChange(e);
+                               setIsRouteManuallySet(true);
+                             }}
+                           />
+                         )}
+                       </Field>
                        <ErrorMessage name="route" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
                     </div>
                   </div>
@@ -304,6 +339,7 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
             <li>{strings.TIP_1}</li>
             <li>{strings.TIP_2}</li>
             <li>{strings.TIP_3}</li>
+            <li>{strings.TIP_4}</li>
           </ul>
           </div>
 
@@ -318,11 +354,21 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
             ) : unassignedRoutes.length > 0 ? (
               <div className="max-h-[300px] overflow-y-auto pr-2 space-y-2 custom-scrollbar">
                 {unassignedRoutes.map((route, idx) => (
-                  <div key={idx} className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50 border border-transparent hover:border-gray-100 transition-colors">
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
-                    <code className="text-xs bg-gray-50 px-1.5 py-0.5 rounded text-gray-700 font-mono break-all">
-                      {route}
-                    </code>
+                  <div key={idx} className="flex items-center justify-between p-2 rounded-md hover:bg-gray-50 border border-transparent hover:border-gray-100 transition-colors group">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></div>
+                      <code className="text-xs bg-gray-50 px-1.5 py-0.5 rounded text-gray-700 font-mono truncate">
+                        {route}
+                      </code>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleAutoFill(route)}
+                      className="ml-2 shrink-0 p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors opacity-0 group-hover:opacity-100"
+                      title="Auto-fill form"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
                   </div>
                 ))}
               </div>
