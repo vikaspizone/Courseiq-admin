@@ -16,6 +16,7 @@ export interface Module {
   is_active?: boolean;
   icon?: string;
   route?: string;
+  sort_order?: number;
   translations?: Translation[];
   created_at: string;
   updated_at?: string;
@@ -25,6 +26,7 @@ export interface ModulePayload {
   is_active: boolean;
   icon?: string;
   route?: string;
+  sort_order?: number;
   translations: {
     languageCode: string;
     name: string;

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Pencil, Trash2, Plus } from 'lucide-react';
+import { Pencil, Trash2, Plus, GripVertical } from 'lucide-react';
 import { AppLoader } from '@/features/common/components/AppLoader';
 import { useModuleList } from '../hooks/useModuleList';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
@@ -15,7 +15,16 @@ import { MODULE_STRINGS } from '../constants';
 import { ROUTES } from '@/features/common/constants/routes';
 
 export const ModuleList: React.FC = () => {
-  const { modules, loading, handleDelete, handleToggleActive } = useModuleList();
+  const { 
+    modules, 
+    loading, 
+    handleDelete, 
+    handleToggleActive, 
+    moveModuleLocally, 
+    saveModuleOrder,
+    draggedIndex,
+    setDraggedIndex
+  } = useModuleList();
   const { language } = useLanguage();
   const strings = MODULE_STRINGS[language];
 
@@ -44,6 +53,7 @@ export const ModuleList: React.FC = () => {
           <table className="w-full text-sm text-left">
             <thead className="bg-gray-50/50 text-gray-500 font-medium border-b border-gray-100">
               <tr>
+                <th className="px-6 py-4 w-10"></th>
                 <th className="px-6 py-4">{strings.TH_NAME}</th>
                 <th className="px-6 py-4">{strings.TH_STATUS}</th>
                 <th className="px-6 py-4">{strings.TH_ROUTE}</th>
@@ -54,13 +64,41 @@ export const ModuleList: React.FC = () => {
             <tbody className="divide-y divide-gray-100">
               {modules.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                     {strings.NO_MODULES}
                   </td>
                 </tr>
               ) : (
-                modules.map((module) => (
-                  <tr key={module.id} className="hover:bg-gray-50/50 transition-colors">
+                modules.map((module, index) => (
+                  <tr 
+                    key={module.id} 
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.effectAllowed = 'move';
+                      setDraggedIndex(index);
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                    }}
+                    onDragEnter={(e) => {
+                      if (draggedIndex !== null && draggedIndex !== index) {
+                        moveModuleLocally(draggedIndex, index);
+                        setDraggedIndex(index);
+                      }
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                    }}
+                    onDragEnd={() => {
+                      setDraggedIndex(null);
+                      saveModuleOrder();
+                    }}
+                    className={`hover:bg-gray-50/50 transition-colors ${draggedIndex === index ? 'opacity-50' : ''}`}
+                  >
+                    <td className="px-6 py-4 cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 transition-colors">
+                      <GripVertical className="w-5 h-5" />
+                    </td>
                     <td className="px-6 py-4 font-medium text-gray-900">
                       {module.translations?.find(t => t.languageCode === language)?.name || module.translations?.[0]?.name || module.name || '-'}
                     </td>
@@ -86,17 +124,17 @@ export const ModuleList: React.FC = () => {
                     <td className="px-6 py-4 text-gray-500">
                       {new Date(module.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-right space-x-2">
+                    <td className="px-6 py-4 text-right space-x-1">
                       <Link
                         href={`/module/${module.id}/edit`}
-                        className="inline-flex p-2 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                        className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors ml-2"
                         title="Edit Module"
                       >
                         <Pencil className="w-4 h-4" />
                       </Link>
                       <button
                         onClick={() => handleDelete(module.id)}
-                        className="inline-flex p-2 items-center justify-center rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+                        className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                         title="Delete Module"
                       >
                         <Trash2 className="w-4 h-4" />

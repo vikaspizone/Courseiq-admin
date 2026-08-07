@@ -15,7 +15,8 @@ export function useModuleList() {
     setLoading(true);
     try {
       const data = await getModules();
-      setModules(data);
+      const sortedData = data.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+      setModules(sortedData);
     } catch (error) {
       console.error('Failed to fetch modules', error);
     } finally {
@@ -56,5 +57,47 @@ export function useModuleList() {
     }
   };
 
-  return { modules, loading, handleDelete, handleToggleActive, fetchModules };
+  const moveModuleLocally = (dragIndex: number, hoverIndex: number) => {
+    if (dragIndex === hoverIndex) return;
+
+    setModules((prevModules) => {
+      const newModules = [...prevModules];
+      const draggedModule = newModules[dragIndex];
+
+      newModules.splice(dragIndex, 1);
+      newModules.splice(hoverIndex, 0, draggedModule);
+
+      return newModules.map((mod, index) => ({
+        ...mod,
+        sort_order: index + 1,
+      }));
+    });
+  };
+
+  const saveModuleOrder = async () => {
+    try {
+      const promises = modules.map(async (mod) => {
+        return updateModule(mod.id, { sort_order: mod.sort_order });
+      });
+      await Promise.all(promises);
+      window.dispatchEvent(new Event('modulesUpdated'));
+    } catch (error) {
+      console.error('Failed to save module order', error);
+      fetchModules();
+    }
+  };
+
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  return { 
+    modules, 
+    loading, 
+    handleDelete, 
+    handleToggleActive, 
+    moveModuleLocally,
+    saveModuleOrder,
+    draggedIndex,
+    setDraggedIndex,
+    fetchModules 
+  };
 }
