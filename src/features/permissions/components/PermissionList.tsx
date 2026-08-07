@@ -13,6 +13,7 @@ import { usePermissionList } from '../hooks/usePermissionList';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { PERMISSION_STRINGS } from '../constants';
 import { ROUTES } from '@/features/common/constants/routes';
+import { PermissionGuard } from '@/features/auth/components/PermissionGuard';
 
 export const PermissionList: React.FC = () => {
   const { permissions, loading, handleDelete } = usePermissionList();
@@ -30,13 +31,15 @@ export const PermissionList: React.FC = () => {
           <h2 className="text-2xl font-semibold text-gray-900">{strings.TITLE}</h2>
           <p className="text-sm text-gray-500 mt-1">{strings.DESC}</p>
         </div>
-        <Link
-          href={ROUTES.PERMISSION_CREATE}
-          className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-4 shadow-sm"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          {strings.ADD_PERMISSION}
-        </Link>
+        <PermissionGuard moduleId="f514e11a-1b4e-46a0-a71c-a66d92c85a1a" action="create">
+          <Link
+            href={ROUTES.PERMISSION_CREATE}
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-4 shadow-sm"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {strings.ADD_PERMISSION}
+          </Link>
+        </PermissionGuard>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -64,20 +67,24 @@ export const PermissionList: React.FC = () => {
                       {new Date(permission.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <Link
-                        href={`/permission/${permission.id}/edit`}
-                        className="inline-flex p-2 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                        title="Edit Permission"
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(permission.id)}
-                        className="inline-flex p-2 items-center justify-center rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
-                        title="Delete Permission"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <PermissionGuard moduleId="f514e11a-1b4e-46a0-a71c-a66d92c85a1a" action="edit">
+                        <Link
+                          href={`/permission/${permission.id}/edit`}
+                          className="inline-flex p-2 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                          title="Edit Permission"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Link>
+                      </PermissionGuard>
+                      <PermissionGuard moduleId="f514e11a-1b4e-46a0-a71c-a66d92c85a1a" action="delete">
+                        <button
+                          onClick={() => handleDelete(permission.id)}
+                          className="inline-flex p-2 items-center justify-center rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+                          title="Delete Permission"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </PermissionGuard>
                     </td>
                   </tr>
                 ))

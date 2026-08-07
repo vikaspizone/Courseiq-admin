@@ -82,7 +82,9 @@ export const AUTH_STRINGS = {
     CONTACT_SUPPORT: "Contact Support",
     SESSION_ENDED: "Session Ended",
     SESSION_EXPIRED: "Your session has expired. Please log in again to continue.",
-    LOG_IN_AGAIN: "Log In Again"
+    LOG_IN_AGAIN: "Log In Again",
+    ACCESS_DENIED: "Access Denied",
+    ACCESS_DENIED_DESC: "You do not have permission to view this page."
   },
   hi: {
     TITLE: "वापसी पर स्वागत है",
@@ -136,6 +138,8 @@ export const AUTH_STRINGS = {
     CONTACT_SUPPORT: "समर्थन से संपर्क करें",
     SESSION_ENDED: "सत्र समाप्त",
     SESSION_EXPIRED: "आपका सत्र समाप्त हो गया है। कृपया जारी रखने के लिए फिर से लॉग इन करें।",
-    LOG_IN_AGAIN: "फिर से लॉग इन करें"
+    LOG_IN_AGAIN: "फिर से लॉग इन करें",
+    ACCESS_DENIED: "पहुंच अस्वीकृत",
+    ACCESS_DENIED_DESC: "आपके पास इस पृष्ठ को देखने की अनुमति नहीं है।"
   }
 };

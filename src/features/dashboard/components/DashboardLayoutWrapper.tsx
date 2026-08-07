@@ -9,11 +9,14 @@ import React from 'react';
 import { useDashboard } from "@/features/dashboard/hooks/useDashboard";
 import { Header } from "@/features/common/header/components/Header";
 import { NavigationMenu } from "@/features/common/header/components/NavigationMenu";
+import { useRouteGuard } from "@/features/auth/hooks/useRouteGuard";
+import { AccessDenied } from "@/features/auth/components/AccessDenied";
 
 export function DashboardLayoutWrapper({ children }: { children: React.ReactNode }) {
   const { userEmail, userProfile, isSidebarOpen, setIsSidebarOpen, handleLogout } = useDashboard();
+  const { isAccessDenied, authLoading } = useRouteGuard();
 
-  if (!userEmail) {
+  if (!userEmail || authLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50">
         <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -33,7 +36,7 @@ export function DashboardLayoutWrapper({ children }: { children: React.ReactNode
           onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
         />
         <main className="w-full">
-          {children}
+          {isAccessDenied ? <AccessDenied /> : children}
         </main>
       </div>
     </div>

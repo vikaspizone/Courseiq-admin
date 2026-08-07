@@ -12,6 +12,7 @@ import * as LucideIcons from "lucide-react";
 import { HEADER_STRINGS } from "../constants";
 import { useLanguage } from "../../lang/contexts/LanguageContext";
 import { useModuleList } from "@/features/modules/hooks/useModuleList";
+import { useAuth } from "@/features/auth/contexts/AuthContext";
 
 interface NavigationMenuProps {
   isOpen: boolean;
@@ -24,10 +25,11 @@ export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
   const pathname = usePathname();
   
   const { modules, loading: isLoading } = useModuleList();
+  const { hasModuleAccess, userProfile } = useAuth();
 
   const dynamicItems = useMemo(() => {
     return modules
-      .filter((m) => m.is_active)
+      .filter((m) => m.is_active && hasModuleAccess(m.id))
       .map((m) => {
         let rawName = '';
         if (language === 'hi') {
@@ -54,7 +56,7 @@ export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
           href,
         };
       });
-  }, [modules, language]);
+  }, [modules, language, hasModuleAccess, userProfile]);
 
   return (
     <div className={`flex-shrink-0 bg-white h-full flex flex-col z-50 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'} shadow-[4px_0_24px_rgba(0,0,0,0.02)]`}>
