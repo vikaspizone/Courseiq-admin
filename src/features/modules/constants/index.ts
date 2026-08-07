@@ -43,6 +43,12 @@ export const MODULE_STRINGS = {
     UNASSIGNED_ROUTES: "Unassigned Routes",
     LOADING_ROUTES: "Loading routes...",
     ALL_ROUTES_ASSIGNED: "All routes have modules assigned.",
+    ROUTE_TIPS_TITLE: "Route Assignment Tips",
+    ROUTE_TIPS_DESC_1: "The Route Path must exactly match your frontend route (e.g., /dashboard).",
+    ROUTE_TIPS_DESC_2: "When creating a module, it auto-generates as you type the name, but you can manually edit it.",
+    ROUTE_TIPS_DESC_3: "When editing an existing module, the route will not auto-update to prevent breaking existing assignments.",
+    ROUTE_TIPS_NOTE_TITLE: "Note:",
+    ROUTE_TIPS_GOT_IT: "Got it",
   },
   hi: {
     TITLE: "मॉड्यूल (Modules)",
@@ -83,5 +89,11 @@ export const MODULE_STRINGS = {
     UNASSIGNED_ROUTES: "असाइन नहीं किए गए रूट (Unassigned Routes)",
     LOADING_ROUTES: "रूट लोड हो रहे हैं...",
     ALL_ROUTES_ASSIGNED: "सभी रूट मॉड्यूल को असाइन कर दिए गए हैं।",
+    ROUTE_TIPS_TITLE: "रूट असाइनमेंट टिप्स (Route Assignment Tips)",
+    ROUTE_TIPS_DESC_1: "रूट पथ (Route Path) आपके फ्रंटएंड रूट (जैसे, /dashboard) से बिल्कुल मेल खाना चाहिए।",
+    ROUTE_TIPS_DESC_2: "मॉड्यूल बनाते समय, जैसे ही आप नाम टाइप करते हैं यह स्वतः जनरेट हो जाता है, लेकिन आप इसे मैन्युअल रूप से भी संपादित कर सकते हैं।",
+    ROUTE_TIPS_DESC_3: "मौजूदा मॉड्यूल को संपादित करते समय, मौजूदा असाइनमेंट को टूटने से बचाने के लिए रूट स्वतः अपडेट नहीं होगा।",
+    ROUTE_TIPS_NOTE_TITLE: "नोट:",
+    ROUTE_TIPS_GOT_IT: "समझ गया (Got it)",
   }
 };

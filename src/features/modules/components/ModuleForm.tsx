@@ -8,7 +8,7 @@
 import React, { useRef, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, FormikProps } from 'formik';
 import { Module } from '../types';
-import { ArrowLeft, Save, Key, FileText, Lightbulb, LayoutDashboard, BookOpen, Users, Shield, UserSquare, Plus } from 'lucide-react';
+import { ArrowLeft, Save, Key, FileText, Lightbulb, LayoutDashboard, BookOpen, Users, Shield, UserSquare, Plus, Info, X } from 'lucide-react';
 import Link from 'next/link';
 import { useModuleForm } from '../hooks/useModuleForm';
 import { useModuleList } from '../hooks/useModuleList';
@@ -24,6 +24,7 @@ interface ModuleFormProps {
 export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
   const formikRef = useRef<FormikProps<any>>(null);
   const [isRouteManuallySet, setIsRouteManuallySet] = useState(false);
+  const [isTipsModalOpen, setIsTipsModalOpen] = useState(false);
   const { isEditing, handleSubmit } = useModuleForm(initialData);
   const { modules, loading } = useModuleList();
   const { language } = useLanguage();
@@ -117,14 +118,7 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
           {isEditing ? strings.EDIT_DESC : strings.CREATE_DESC}
         </p>
 
-        {/* Route Flow Info Banner */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3 text-amber-800">
-          <Lightbulb className="w-5 h-5 shrink-0 mt-0.5 text-amber-600" />
-          <div className="text-sm">
-            <p className="font-semibold mb-1">Route Assignment Flow:</p>
-            <p>The <strong>Route Path</strong> must exactly match your frontend route (e.g., <code>/dashboard</code>). When creating a module, it auto-generates as you type the name, but you can manually edit it. When editing an existing module, the route will not auto-update to prevent breaking existing assignments. <strong className="block mt-1">Note: Route paths must be lowercase, use hyphens (-) instead of spaces, and contain no capital letters.</strong></p>
-          </div>
-        </div>
+
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -230,9 +224,19 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
                       <FileText className="text-blue-500 w-6 h-6" />
                     </div>
                     <div className="flex-1">
-                       <label className="text-sm font-medium text-gray-700 block mb-1">
-                         {strings.LABEL_ROUTE}
-                       </label>
+                       <div className="flex items-center justify-between mb-1">
+                         <label className="text-sm font-medium text-gray-700">
+                           {strings.LABEL_ROUTE}
+                         </label>
+                         <button 
+                           type="button" 
+                           onClick={() => setIsTipsModalOpen(true)} 
+                           className="text-orange-500 hover:text-orange-600 transition-colors"
+                           title="Route Path Tips"
+                         >
+                           <Info className="w-4 h-4" />
+                         </button>
+                       </div>
                        <Field name="route">
                          {({ field, form }: any) => (
                            <input
@@ -271,34 +275,7 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
                   </div>
                 </div>
 
-                {/* Modules Selection (Mock) */}
-                <div className="flex gap-4 items-start">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 mt-1">
-                    <LayoutDashboard className="text-blue-500 w-6 h-6" />
-                  </div>
-                  <div className="flex-1 overflow-hidden">
-                     <label className="text-sm font-medium text-gray-700 block mb-1">
-                       {strings.LABEL_MODULES}
-                     </label>
-                     <p className="text-sm text-gray-500 mb-4">
-                       {strings.DESC_MODULES}
-                     </p>
-                     
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {modulesList.map((item, idx) => (
-                           <label key={idx} className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                              <input 
-                                type="checkbox"
-                                defaultChecked={idx % 2 === 0}
-                                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                              />
-                              <item.icon className="w-4 h-4 text-gray-500" />
-                              <span className="text-sm font-medium text-gray-700">{item.module}</span>
-                           </label>
-                        ))}
-                     </div>
-                  </div>
-                </div>
+
 
                 <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 mt-8 pt-6">
                   <Link
@@ -379,6 +356,45 @@ export const ModuleForm: React.FC<ModuleFormProps> = ({ initialData }) => {
         </div>
 
       </div>
+
+      {/* Tips Modal */}
+      {isTipsModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden flex flex-col scale-in-center">
+            <div className="flex items-center justify-between p-4 border-b border-gray-100">
+              <h3 className="font-semibold text-lg flex items-center gap-2 text-gray-800">
+                <Lightbulb className="w-5 h-5 text-amber-500" />
+                {strings.ROUTE_TIPS_TITLE}
+              </h3>
+              <button 
+                type="button"
+                onClick={() => setIsTipsModalOpen(false)} 
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-4 text-sm text-gray-600 leading-relaxed">
+              <p className="mb-3" dangerouslySetInnerHTML={{ __html: strings.ROUTE_TIPS_DESC_1.replace('/dashboard', '<code>/dashboard</code>').replace('Route Path', '<strong>Route Path</strong>').replace('रूट पथ (Route Path)', '<strong>रूट पथ (Route Path)</strong>') }}></p>
+              <p className="mb-3">{strings.ROUTE_TIPS_DESC_2}</p>
+              <p className="mb-3">{strings.ROUTE_TIPS_DESC_3}</p>
+              <div className="bg-amber-50 p-3 rounded-lg border border-amber-100 mt-4 text-amber-800">
+                <p className="font-semibold text-sm mb-1">{strings.ROUTE_TIPS_NOTE_TITLE}</p>
+                <p>{strings.TIP_4}</p>
+              </div>
+            </div>
+            <div className="p-4 border-t border-gray-100 flex justify-end bg-gray-50">
+              <button 
+                type="button"
+                onClick={() => setIsTipsModalOpen(false)} 
+                className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium transition-colors"
+              >
+                {strings.ROUTE_TIPS_GOT_IT}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
