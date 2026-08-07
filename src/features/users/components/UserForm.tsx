@@ -220,6 +220,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                   </div>
 
                   {/* Password */}
+                  {!isEditing && (
                   <div className="flex gap-3 items-start">
                     <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 mt-1">
                       <Lock className="text-blue-500 w-5 h-5" />
@@ -239,8 +240,10 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                            <Eye className="w-4 h-4" />
                          </button>
                        </div>
+                       <ErrorMessage name="password" component="div" className="text-[0.8rem] font-medium text-red-500 mt-1" />
                     </div>
                   </div>
+                  )}
 
                   {/* About */}
                   <div className="flex gap-3 items-start col-span-1 md:col-span-2">

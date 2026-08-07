@@ -19,9 +19,10 @@ export const UserSchema = Yup.object().shape({
     .optional(),
   gender: Yup.string(),
   profile_image: Yup.string(),
-  password: Yup.string()
-    .min(8, 'Password must be at least 8 characters')
-    .optional(), // Make optional so edit doesn't require it, we can handle required dynamically if needed
+  password: Yup.string().test('is-empty-or-valid', 'Password must be at least 8 characters', (value) => {
+    if (!value || value.length === 0) return true; // allow empty (for edit)
+    return value.length >= 8; // validate min length if provided
+  }),
   about: Yup.string()
     .max(500, 'About text cannot exceed 500 characters')
     .optional(),
@@ -32,7 +33,7 @@ export const UserSchema = Yup.object().shape({
     year: Yup.number().typeError('Year must be a number')
   }),
   experience: Yup.number().typeError('Experience must be a number'),
-  languages: Yup.array().of(Yup.string()),
+  languages: Yup.string(),
   address: Yup.object().shape({
     city: Yup.string(),
     country: Yup.string()

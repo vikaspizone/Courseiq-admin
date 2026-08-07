@@ -6,6 +6,7 @@
 import * as Yup from 'yup';
 
 export const getCreatePermissionSchema = (strings: any) => Yup.object().shape({
+  code: Yup.string().required('Code is required'),
   name_en: Yup.string()
     .min(2, strings.ERR_NAME_MIN || 'Name is too short!')
     .max(50, strings.ERR_NAME_MAX || 'Name is too long!')
@@ -18,6 +19,7 @@ export const getCreatePermissionSchema = (strings: any) => Yup.object().shape({
 });
 
 export const getUpdatePermissionSchema = (strings: any) => Yup.object().shape({
+  code: Yup.string().required('Code is required'),
   name_en: Yup.string()
     .min(2, strings.ERR_NAME_MIN || 'Name is too short!')
     .max(50, strings.ERR_NAME_MAX || 'Name is too long!')

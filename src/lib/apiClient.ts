@@ -20,6 +20,32 @@ export async function fetchWithAuth(endpoint: string, options: RequestInit = {})
     headers["Authorization"] = `Bearer ${token}`;
   }
 
+  const method = options.method?.toUpperCase() || 'GET';
+  if (['POST', 'PUT', 'PATCH'].includes(method) && typeof options.body === 'string') {
+    try {
+      const parsedBody = JSON.parse(options.body);
+      const removeEmptyStrings = (obj: any): any => {
+        if (Array.isArray(obj)) return obj.map(removeEmptyStrings);
+        if (obj !== null && typeof obj === 'object') {
+          const newObj: Record<string, any> = {};
+          for (const key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+              const val = obj[key];
+              if (val !== "") {
+                newObj[key] = removeEmptyStrings(val);
+              }
+            }
+          }
+          return newObj;
+        }
+        return obj;
+      };
+      options.body = JSON.stringify(removeEmptyStrings(parsedBody));
+    } catch (e) {
+      // Ignore parse errors
+    }
+  }
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
