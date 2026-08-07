@@ -5,7 +5,7 @@
  * Provides a form for creating and editing roles.
 */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { FormInput } from '../../common/components/FormInput';
 import { Role } from '../types';
@@ -18,18 +18,54 @@ import { RoleSchema } from '../validation';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { ROLE_STRINGS } from '../constants';
 import { ROUTES } from '@/features/common/constants/routes';
+import { getRolePermissions } from '@/features/role-permissions/api';
+import { RolePermission } from '@/features/role-permissions/types';
 
 interface RoleFormProps {
   initialData?: Role;
 }
 
 export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
-  const { isEditing, handleSubmit } = useRoleForm(initialData);
   const { language } = useLanguage();
   const strings = ROLE_STRINGS[language];
   const { permissions: apiPermissions, loading: permissionsLoading } = usePermissionList();
   const { modules, loading: modulesLoading } = useModuleList();
+  
   const activeModules = modules.filter(m => m.is_active);
+  const activePermissions = apiPermissions.filter(p => p.is_active !== false);
+
+  const {
+    isEditing,
+    handleSubmit,
+    matrix,
+    loadingRolePerms,
+    handleCheckboxChange,
+    handleSelectAllModule,
+    handleSelectAll,
+    isModuleFullySelected,
+    isAllSelected
+  } = useRoleForm(initialData, activeModules, activePermissions, language);
+
+  const getPermissionName = (perm: any) => {
+    if (perm.name) return perm.name;
+    if (perm.translations && perm.translations.length > 0) {
+      const translation = perm.translations.find((t: any) => t.languageCode === language) || perm.translations[0];
+      return translation.name;
+    }
+    return 'Unknown';
+  };
+
+  const getModuleName = (module: any) => {
+    const moduleName = module.translations?.find((t: any) => t.languageCode === language)?.name 
+      || module.translations?.[0]?.name 
+      || module.name 
+      || 'Unnamed';
+    return moduleName;
+  };
+
+  const onFormSubmit = (values: any, formikHelpers: any) => {
+    handleSubmit(values, formikHelpers);
+  };
 
   return (
     <div className="w-full">
@@ -61,7 +97,7 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
               is_active: initialData?.is_active ?? true,
             }}
             validationSchema={RoleSchema}
-            onSubmit={handleSubmit}
+            onSubmit={onFormSubmit}
           >
             {({ isSubmitting, getFieldProps }) => (
               <Form className="space-y-8">
@@ -143,43 +179,64 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
                           <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 font-medium">
                             <tr>
                               <th className="px-4 py-3">{strings.TH_MODULE}</th>
+                              <th className="px-4 py-3">
+                                {activePermissions.length > 0 && (
+                                  <label className="flex items-center gap-2 cursor-pointer justify-center">
+                                    <input 
+                                      type="checkbox"
+                                      checked={isAllSelected()}
+                                      onChange={(e) => handleSelectAll(e.target.checked)}
+                                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                                    />
+                                    <span>{strings.SELECT_ALL}</span>
+                                  </label>
+                                )}
+                              </th>
                               {permissionsLoading ? (
                                 <th className="px-4 py-3 text-center text-gray-400">Loading...</th>
                               ) : (
-                                apiPermissions.map((p) => (
+                                activePermissions.map((p) => (
                                   <th key={p.id} className="px-4 py-3 text-center">
-                                    {p.name || (p.translations && p.translations.length > 0 ? p.translations[0].name : 'Unnamed')}
+                                    {getPermissionName(p)}
                                   </th>
                                 ))
                               )}
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-100">
-                            {modulesLoading ? (
-                              <tr><td colSpan={10} className="px-4 py-8 text-center text-gray-500">Loading modules...</td></tr>
+                            {modulesLoading || loadingRolePerms ? (
+                              <tr><td colSpan={10} className="px-4 py-8 text-center text-gray-500">Loading data...</td></tr>
                             ) : activeModules.length === 0 ? (
                               <tr><td colSpan={10} className="px-4 py-8 text-center text-gray-500">No active modules found</td></tr>
                             ) : (
                               activeModules.map((module) => {
-                                const moduleName = module.translations?.find(t => t.languageCode === language)?.name 
-                                  || module.translations?.[0]?.name 
-                                  || module.name 
-                                  || 'Unnamed';
-                                  
                                 return (
                                   <tr key={module.id} className="bg-white">
                                     <td className="px-4 py-3 flex items-center gap-2 font-medium text-gray-700">
                                       <LayoutDashboard className="w-4 h-4 text-gray-400" />
-                                      {moduleName}
+                                      {getModuleName(module)}
+                                    </td>
+                                    <td className="px-4 py-3">
+                                      <label className="flex items-center gap-2 cursor-pointer justify-center whitespace-nowrap text-sm text-gray-600">
+                                        <input 
+                                          type="checkbox"
+                                          checked={isModuleFullySelected(module.id)}
+                                          onChange={(e) => handleSelectAllModule(module.id, e.target.checked)}
+                                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                                        />
+                                        <span>{strings.SELECT_ALL}</span>
+                                      </label>
                                     </td>
                                     {permissionsLoading ? (
                                       <td className="px-4 py-3 text-center">...</td>
                                     ) : (
-                                      apiPermissions.map((p) => (
+                                      activePermissions.map((p) => (
                                         <td key={p.id} className="px-4 py-3 text-center">
                                             <input 
                                               type="checkbox" 
-                                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                              checked={matrix[module.id]?.[p.id] || false}
+                                              onChange={(e) => handleCheckboxChange(module.id, p.id, e.target.checked)}
+                                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
                                             />
                                         </td>
                                       ))
@@ -195,12 +252,12 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
                 </div>
 
                 <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 mt-8 pt-6">
-                  <button
-                    type="button"
+                  <Link
+                    href={ROUTES.ROLE}
                     className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 h-10 py-2 px-6 shadow-sm transition-colors"
                   >
                     {strings.CANCEL}
-                  </button>
+                  </Link>
                   <button
                     type="submit"
                     disabled={isSubmitting}
@@ -238,4 +295,3 @@ export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
     </div>
   );
 };
-
