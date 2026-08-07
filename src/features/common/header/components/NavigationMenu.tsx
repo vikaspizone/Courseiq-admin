@@ -44,11 +44,14 @@ export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
           .map(word => word ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : '')
           .join(' ');
 
+        const rawRoute = m.route || `/${formattedName.toLowerCase().replace(/\s+/g, '-')}`;
+        const href = rawRoute.startsWith('/') ? rawRoute : `/${rawRoute}`;
+
         return {
           id: m.id,
           name: formattedName,
           iconName: m.icon || 'Grid',
-          href: m.route || `/${formattedName.toLowerCase().replace(/\s+/g, '-')}`,
+          href,
         };
       });
   }, [modules, language]);
