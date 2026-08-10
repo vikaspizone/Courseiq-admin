@@ -30,6 +30,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async () => {
+    const token = sessionStorage.getItem("token");
+    if (!token || isTokenExpired(token)) return;
+
     try {
       const response = await fetchWithAuth(API_ENDPOINTS.AUTH.PROFILE);
       if (response.ok) {

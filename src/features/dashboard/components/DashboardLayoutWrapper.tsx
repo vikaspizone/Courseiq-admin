@@ -5,7 +5,8 @@
  * UI component for DashboardLayoutWrapper.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useDashboard } from "@/features/dashboard/hooks/useDashboard";
 import { Header } from "@/features/common/header/components/Header";
 import { NavigationMenu } from "@/features/common/header/components/NavigationMenu";
@@ -14,7 +15,14 @@ import { AccessDenied } from "@/features/auth/components/AccessDenied";
 
 export function DashboardLayoutWrapper({ children }: { children: React.ReactNode }) {
   const { userEmail, userProfile, isSidebarOpen, setIsSidebarOpen, handleLogout } = useDashboard();
-  const { isAccessDenied, authLoading } = useRouteGuard();
+  const { isAccessDenied, authLoading, firstAccessibleRoute } = useRouteGuard();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAccessDenied && firstAccessibleRoute) {
+      router.push(firstAccessibleRoute);
+    }
+  }, [isAccessDenied, firstAccessibleRoute, router]);
 
   if (!userEmail || authLoading) {
     return (
@@ -23,6 +31,16 @@ export function DashboardLayoutWrapper({ children }: { children: React.ReactNode
       </div>
     );
   }
+
+  // If access is denied, we show nothing (or a loader) while redirecting to the first available route,
+  // otherwise fallback to AccessDenied.
+  const mainContent = isAccessDenied 
+    ? (firstAccessibleRoute ? (
+        <div className="flex h-full items-center justify-center bg-slate-50">
+          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      ) : <AccessDenied />)
+    : children;
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden text-gray-900">
@@ -36,7 +54,7 @@ export function DashboardLayoutWrapper({ children }: { children: React.ReactNode
           onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
         />
         <main className="w-full">
-          {isAccessDenied ? <AccessDenied /> : children}
+          {mainContent}
         </main>
       </div>
     </div>

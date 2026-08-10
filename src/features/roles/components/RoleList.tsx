@@ -13,12 +13,26 @@ import { useRoleList } from '../hooks/useRoleList';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { ROLE_STRINGS } from '../constants';
 import { ROUTES } from '@/features/common/constants/routes';
+import { useModuleList } from '@/features/modules/hooks/useModuleList';
+import { PermissionGuard } from '@/features/auth/components/PermissionGuard';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
 
 export const RoleList: React.FC = () => {
   const { roles, loading, handleDelete } = useRoleList();
   const { language } = useLanguage();
   const strings = ROLE_STRINGS[language];
   const [searchTerm, setSearchTerm] = useState('');
+  const { modules } = useModuleList();
+  
+  // Find the role module to get its ID
+  const currentModule = modules.find(m => 
+    m.name.toLowerCase().includes('role') || 
+    m.route === '/role'
+  );
+  const moduleId = currentModule?.id || '';
+  const { hasPermission } = useAuth();
+  
+  const hasActionPermission = hasPermission(moduleId, 'edit') || hasPermission(moduleId, 'delete');
 
   if (loading) {
     return <AppLoader message="Loading roles..." />;
@@ -60,13 +74,15 @@ export const RoleList: React.FC = () => {
           </div>
         </div>
         
-        <Link
-          href={ROUTES.ROLE_CREATE}
-          className="relative z-10 flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-5 shadow-sm"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          {strings.ADD_ROLE}
-        </Link>
+        <PermissionGuard moduleId={moduleId} action="create">
+          <Link
+            href={ROUTES.ROLE_CREATE}
+            className="relative z-10 flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-5 shadow-sm"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {strings.ADD_ROLE}
+          </Link>
+        </PermissionGuard>
       </div>
 
       {/* Summary Cards */}
@@ -163,13 +179,13 @@ export const RoleList: React.FC = () => {
                     Created At <ArrowUpDown className="w-3.5 h-3.5" />
                   </div>
                 </th>
-                <th className="px-6 py-4 text-right">Actions</th>
+                {hasActionPermission && <th className="px-6 py-4 text-right">Actions</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filteredRoles.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-16 text-center text-gray-500">
+                  <td colSpan={hasActionPermission ? 4 : 3} className="px-6 py-16 text-center text-gray-500">
                     <div className="flex flex-col items-center justify-center">
                       <Shield className="w-12 h-12 text-gray-300 mb-3" />
                       <p className="text-base font-medium">{strings.NO_ROLES}</p>
@@ -222,24 +238,30 @@ export const RoleList: React.FC = () => {
                       </td>
                       
                       {/* Actions */}
-                      <td className="px-6 py-4 text-right">
-                         <div className="flex items-center justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                            <Link
-                              href={`/role/${role.id}/edit`}
-                              className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 hover:text-purple-700 flex items-center justify-center transition-colors"
-                              title="Edit Role"
-                            >
-                              <Pencil className="w-4 h-4" />
-                            </Link>
-                            <button
-                              onClick={() => role.id && handleDelete(role.id)}
-                              className="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 flex items-center justify-center transition-colors"
-                              title="Delete Role"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                         </div>
-                      </td>
+                      {hasActionPermission && (
+                        <td className="px-6 py-4 text-right">
+                           <div className="flex items-center justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                              <PermissionGuard moduleId={moduleId} action="edit">
+                                <Link
+                                  href={`/role/${role.id}/edit`}
+                                  className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 hover:text-purple-700 flex items-center justify-center transition-colors"
+                                  title="Edit Role"
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                </Link>
+                              </PermissionGuard>
+                              <PermissionGuard moduleId={moduleId} action="delete">
+                                <button
+                                  onClick={() => role.id && handleDelete(role.id)}
+                                  className="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 flex items-center justify-center transition-colors"
+                                  title="Delete Role"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </PermissionGuard>
+                           </div>
+                        </td>
+                      )}
                     </tr>
                   )
                 })

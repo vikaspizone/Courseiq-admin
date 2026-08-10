@@ -10,6 +10,7 @@ import { ROUTES } from "@/features/common/constants/routes";
 import { API_ENDPOINTS } from "@/features/common/constants/apiEndpoints";
 import { useLanguage } from "@/features/common/lang/contexts/LanguageContext";
 import { AUTH_MESSAGES } from "../constants";
+import { useAuth as useAuthContext } from "@/features/auth/contexts/AuthContext";
 
 export function useAuth() {
   const [email, setEmail] = useState("");
@@ -21,6 +22,7 @@ export function useAuth() {
   
   const { language } = useLanguage();
   const messages = AUTH_MESSAGES[language];
+  const { refreshProfile } = useAuthContext();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -87,6 +89,10 @@ export function useAuth() {
         if (payload.refresh_token) {
           sessionStorage.setItem("refresh_token", payload.refresh_token);
         }
+
+        // Fetch user profile immediately after login via global AuthContext
+        await refreshProfile();
+
         router.push(ROUTES.DASHBOARD);
       } else {
         throw new Error("No access token received");

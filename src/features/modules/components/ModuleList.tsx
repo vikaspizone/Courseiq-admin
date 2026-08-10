@@ -13,6 +13,8 @@ import { useModuleList } from '../hooks/useModuleList';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { MODULE_STRINGS } from '../constants';
 import { ROUTES } from '@/features/common/constants/routes';
+import { PermissionGuard } from '@/features/auth/components/PermissionGuard';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
 
 export const ModuleList: React.FC = () => {
   const { 
@@ -27,6 +29,16 @@ export const ModuleList: React.FC = () => {
   } = useModuleList();
   const { language } = useLanguage();
   const strings = MODULE_STRINGS[language];
+  
+  // Find the module module to get its ID
+  const currentModule = modules.find(m => 
+    m.name.toLowerCase().includes('module') || 
+    m.route === '/module'
+  );
+  const moduleId = currentModule?.id || '';
+  const { hasPermission } = useAuth();
+  
+  const hasActionPermission = hasPermission(moduleId, 'edit') || hasPermission(moduleId, 'delete');
 
   if (loading) {
     return <AppLoader message="Loading modules..." />;
@@ -39,13 +51,15 @@ export const ModuleList: React.FC = () => {
           <h2 className="text-2xl font-semibold text-gray-900">{strings.TITLE}</h2>
           <p className="text-sm text-gray-500 mt-1">{strings.DESC}</p>
         </div>
-        <Link
-          href={ROUTES.MODULE_CREATE}
-          className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-4 shadow-sm"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          {strings.ADD_MODULE}
-        </Link>
+        <PermissionGuard moduleId={moduleId} action="create">
+          <Link
+            href={ROUTES.MODULE_CREATE}
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-4 shadow-sm"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {strings.ADD_MODULE}
+          </Link>
+        </PermissionGuard>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -58,13 +72,13 @@ export const ModuleList: React.FC = () => {
                 <th className="px-6 py-4">{strings.TH_STATUS}</th>
                 <th className="px-6 py-4">{strings.TH_ROUTE}</th>
                 <th className="px-6 py-4">{strings.TH_CREATED}</th>
-                <th className="px-6 py-4 text-right">{strings.TH_ACTIONS}</th>
+                {hasActionPermission && <th className="px-6 py-4 text-right">{strings.TH_ACTIONS}</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {modules.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={hasActionPermission ? 6 : 5} className="px-6 py-8 text-center text-gray-500">
                     {strings.NO_MODULES}
                   </td>
                 </tr>
@@ -124,22 +138,28 @@ export const ModuleList: React.FC = () => {
                     <td className="px-6 py-4 text-gray-500">
                       {new Date(module.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-right space-x-1">
-                      <Link
-                        href={`/module/${module.id}/edit`}
-                        className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors ml-2"
-                        title="Edit Module"
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(module.id)}
-                        className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
-                        title="Delete Module"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </td>
+                    {hasActionPermission && (
+                      <td className="px-6 py-4 text-right space-x-1">
+                        <PermissionGuard moduleId={moduleId} action="edit">
+                          <Link
+                            href={`/module/${module.id}/edit`}
+                            className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors ml-2"
+                            title="Edit Module"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Link>
+                        </PermissionGuard>
+                        <PermissionGuard moduleId={moduleId} action="delete">
+                          <button
+                            onClick={() => handleDelete(module.id)}
+                            className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+                            title="Delete Module"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </PermissionGuard>
+                      </td>
+                    )}
                   </tr>
                 ))
               )}
