@@ -26,7 +26,7 @@ export const PermissionList: React.FC = () => {
   
   // Find the permission module to get its ID
   const currentModule = modules.find(m => 
-    m.name.toLowerCase().includes('permission') || 
+    m.name?.toLowerCase().includes('permission') || 
     m.route === '/permission'
   );
   const moduleId = currentModule?.id || "f514e11a-1b4e-46a0-a71c-a66d92c85a1a";

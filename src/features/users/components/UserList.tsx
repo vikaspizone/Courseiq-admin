@@ -26,7 +26,7 @@ export const UserList: React.FC = () => {
   
   // Find the user module to get its ID
   const currentModule = modules.find(m => 
-    m.name.toLowerCase().includes('user') || 
+    m.name?.toLowerCase().includes('user') || 
     m.route === '/user'
   );
   const moduleId = currentModule?.id || '';

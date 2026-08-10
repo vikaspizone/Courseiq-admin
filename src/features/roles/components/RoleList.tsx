@@ -26,7 +26,7 @@ export const RoleList: React.FC = () => {
   
   // Find the role module to get its ID
   const currentModule = modules.find(m => 
-    m.name.toLowerCase().includes('role') || 
+    m.name?.toLowerCase().includes('role') || 
     m.route === '/role'
   );
   const moduleId = currentModule?.id || '';

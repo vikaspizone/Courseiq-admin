@@ -32,7 +32,7 @@ export const ModuleList: React.FC = () => {
   
   // Find the module module to get its ID
   const currentModule = modules.find(m => 
-    m.name.toLowerCase().includes('module') || 
+    m.name?.toLowerCase().includes('module') || 
     m.route === '/module'
   );
   const moduleId = currentModule?.id || '';
