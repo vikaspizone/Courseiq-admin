@@ -10,5 +10,11 @@ export const API_ENDPOINTS = {
     FORGOT_PASSWORD: '/auth/forgot-password',
     PROFILE: '/auth/profile',
   },
+  COURSE_CATEGORIES: '/course-categories',
+  MODULES: '/modules',
+  PERMISSIONS: '/permissions',
+  ROLE_PERMISSIONS: '/role-permissions',
+  ROLES: '/roles',
+  USERS: '/users',
   // Add other API endpoints here as needed
 };

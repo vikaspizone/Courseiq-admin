@@ -15,8 +15,8 @@ export const useGetUsers = () => {
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const users = await userApi.getUsers();
-      setData(users);
+      const response = await userApi.getUsers(1, 100);
+      setData(response.items || []);
       setError(null);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch users');

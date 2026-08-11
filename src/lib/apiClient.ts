@@ -3,7 +3,7 @@
  * Centralized utility for making authenticated HTTP requests to the backend API.
  */
 
-import { ROUTES } from "@/features/common/constants/routes";
+import { ROUTES } from '@/features/common/constants/routes';
 import { AUTH_MESSAGES } from "@/features/auth/constants";
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;

@@ -28,7 +28,8 @@ let mockUsers: User[] = [
 ];
 
 export const getUsers = async (): Promise<User[]> => {
-  const roles = await getRoles();
+  const rolesResponse = await getRoles();
+  const roles = rolesResponse.items || [];
   return new Promise((resolve) => {
     const populated = mockUsers.map((u) => ({
       ...u,
@@ -39,7 +40,8 @@ export const getUsers = async (): Promise<User[]> => {
 };
 
 export const getUserById = async (id: string): Promise<User | undefined> => {
-  const roles = await getRoles();
+  const rolesResponse = await getRoles();
+  const roles = rolesResponse.items || [];
   return new Promise((resolve) => {
     const user = mockUsers.find((u) => u.id === id);
     if (user) {

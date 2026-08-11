@@ -6,8 +6,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ROUTES } from "@/features/common/constants/routes";
-import { API_ENDPOINTS } from "@/features/common/constants/apiEndpoints";
+import { ROUTES } from '@/features/common/constants/routes';
+import { API_ENDPOINTS } from '@/features/common/constants/apiEndpoints';
 
 export function useRegister() {
   const [loading, setLoading] = useState(false);

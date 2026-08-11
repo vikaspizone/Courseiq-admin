@@ -28,8 +28,8 @@ interface RoleFormProps {
 export const RoleForm: React.FC<RoleFormProps> = ({ initialData }) => {
   const { language } = useLanguage();
   const strings = ROLE_STRINGS[language];
-  const { permissions: apiPermissions, loading: permissionsLoading } = usePermissionList();
-  const { modules, loading: modulesLoading } = useModuleList();
+  const { permissions: apiPermissions, loading: permissionsLoading } = usePermissionList(true);
+  const { modules, loading: modulesLoading } = useModuleList(true);
   
   const activeModules = modules.filter(m => m.is_active);
   const activePermissions = apiPermissions.filter(p => p.is_active !== false);

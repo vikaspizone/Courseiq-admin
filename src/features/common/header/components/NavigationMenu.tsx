@@ -24,7 +24,7 @@ export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
   const strings = HEADER_STRINGS[language];
   const pathname = usePathname();
   
-  const { modules, loading: isLoading } = useModuleList();
+  const { modules, loading: isLoading } = useModuleList(true);
   const { hasModuleAccess, userProfile } = useAuth();
 
   const dynamicItems = useMemo(() => {

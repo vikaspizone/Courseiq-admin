@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Pencil, Trash2, Plus, Shield, Search, Filter, ShieldCheck, ShieldAlert, Calendar, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react';
 import { AppLoader } from '@/features/common/components/AppLoader';
+import { Pagination } from '@/features/common/components/Pagination';
 import { useRoleList } from '../hooks/useRoleList';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { ROLE_STRINGS } from '../constants';
@@ -18,7 +19,7 @@ import { PermissionGuard } from '@/features/auth/components/PermissionGuard';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 
 export const RoleList: React.FC = () => {
-  const { roles, loading, handleDelete } = useRoleList();
+  const { roles, loading, handleDelete, page, setPage, pagination } = useRoleList();
   const { language } = useLanguage();
   const strings = ROLE_STRINGS[language];
   const [searchTerm, setSearchTerm] = useState('');
@@ -270,24 +271,15 @@ export const RoleList: React.FC = () => {
           </table>
         </div>
 
-        {/* Footer / Pagination */}
-        <div className="p-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50/30">
-           <p className="text-sm text-gray-500 font-medium">
-             Showing 1 to {filteredRoles.length} of {filteredRoles.length} roles
-           </p>
-           
-           <div className="flex items-center gap-1">
-             <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 bg-white hover:bg-gray-50 disabled:opacity-50">
-               <ChevronLeft className="w-4 h-4" />
-             </button>
-             <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white font-medium text-sm shadow-sm hover:bg-blue-700 transition-colors">
-               1
-             </button>
-             <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 bg-white hover:bg-gray-50 disabled:opacity-50">
-               <ChevronRight className="w-4 h-4" />
-             </button>
-           </div>
-        </div>
+        {pagination && (
+          <Pagination 
+            currentPage={pagination.currentPage || page} 
+            totalPages={pagination.totalPages || 1} 
+            onPageChange={setPage}
+            totalItems={pagination.totalItems}
+            itemsPerPage={pagination.itemsPerPage}
+          />
+        )}
       </div>
     </div>
   );

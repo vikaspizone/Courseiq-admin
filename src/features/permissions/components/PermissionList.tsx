@@ -9,6 +9,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Pencil, Trash2, Plus } from 'lucide-react';
 import { AppLoader } from '@/features/common/components/AppLoader';
+import { Pagination } from '@/features/common/components/Pagination';
 import { usePermissionList } from '../hooks/usePermissionList';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { PERMISSION_STRINGS } from '../constants';
@@ -18,7 +19,7 @@ import { PermissionGuard } from '@/features/auth/components/PermissionGuard';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 
 export const PermissionList: React.FC = () => {
-  const { permissions, loading, handleDelete } = usePermissionList();
+  const { permissions, loading, handleDelete, page, setPage, pagination } = usePermissionList();
   const { language } = useLanguage();
   const strings = PERMISSION_STRINGS[language];
   const { hasPermission } = useAuth();
@@ -107,6 +108,16 @@ export const PermissionList: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {pagination && (
+        <Pagination 
+          currentPage={pagination.currentPage || page} 
+          totalPages={pagination.totalPages || 1} 
+          onPageChange={setPage}
+          totalItems={pagination.totalItems}
+          itemsPerPage={pagination.itemsPerPage}
+        />
+      )}
     </div>
   );
 };

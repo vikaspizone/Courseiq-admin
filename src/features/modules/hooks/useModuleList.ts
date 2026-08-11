@@ -7,16 +7,24 @@ import { useState, useEffect } from 'react';
 import { Module, ModulePayload } from '../types';
 import { getModules, deleteModule, updateModule } from '../api';
 
-export function useModuleList() {
+export function useModuleList(fetchAll: boolean = false) {
   const [modules, setModules] = useState<Module[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState<any>(null);
 
-  const fetchModules = async () => {
+  const fetchModules = async (currentPage: number = page) => {
     setLoading(true);
     try {
-      const data = await getModules();
-      const sortedData = data.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+      let data = await getModules(currentPage, fetchAll ? 500 : 10);
+      let items = data.items || [];
+      if (!Array.isArray(items)) {
+        console.warn('API returned non-array for modules, defaulting to empty array', items);
+        items = [];
+      }
+      const sortedData = items.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
       setModules(sortedData);
+      setPagination(data.pagination);
     } catch (error) {
       console.error('Failed to fetch modules', error);
     } finally {
@@ -25,7 +33,7 @@ export function useModuleList() {
   };
 
   useEffect(() => {
-    Promise.resolve().then(() => fetchModules());
+    Promise.resolve().then(() => fetchModules(page));
 
     const handleUpdate = () => fetchModules();
     window.addEventListener('modulesUpdated', handleUpdate);
@@ -33,7 +41,7 @@ export function useModuleList() {
     return () => {
       window.removeEventListener('modulesUpdated', handleUpdate);
     };
-  }, []);
+  }, [page]);
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this module?')) {
@@ -98,6 +106,9 @@ export function useModuleList() {
     saveModuleOrder,
     draggedIndex,
     setDraggedIndex,
-    fetchModules 
+    fetchModules,
+    page,
+    setPage,
+    pagination
   };
 }

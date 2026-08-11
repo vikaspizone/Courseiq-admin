@@ -17,5 +17,7 @@ export const ROUTES = {
   ROLE_CREATE: '/role/create',
   USER: '/user',
   USER_CREATE: '/user/create',
+  COURSE_CATEGORY: '/course-category',
+  COURSE_CATEGORY_CREATE: '/course-category/create',
   // Add other frontend routes here as needed
 };

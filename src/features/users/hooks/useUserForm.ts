@@ -19,8 +19,8 @@ export function useUserForm(initialData?: User) {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const data = await getRoles();
-        setRoles(data);
+        const data = await getRoles(1, 100);
+        setRoles(data.items || []);
       } catch (error) {
         console.error('Failed to fetch roles', error);
       }

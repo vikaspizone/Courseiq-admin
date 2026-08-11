@@ -9,6 +9,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Pencil, Trash2, Plus, GripVertical } from 'lucide-react';
 import { AppLoader } from '@/features/common/components/AppLoader';
+import { Pagination } from '@/features/common/components/Pagination';
 import { useModuleList } from '../hooks/useModuleList';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { MODULE_STRINGS } from '../constants';
@@ -25,8 +26,11 @@ export const ModuleList: React.FC = () => {
     moveModuleLocally, 
     saveModuleOrder,
     draggedIndex,
-    setDraggedIndex
-  } = useModuleList();
+    setDraggedIndex,
+    page,
+    setPage,
+    pagination
+  } = useModuleList(true);
   const { language } = useLanguage();
   const strings = MODULE_STRINGS[language];
   
@@ -167,6 +171,16 @@ export const ModuleList: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {pagination && (
+        <Pagination 
+          currentPage={pagination.currentPage || page} 
+          totalPages={pagination.totalPages || 1} 
+          onPageChange={setPage}
+          totalItems={pagination.totalItems}
+          itemsPerPage={pagination.itemsPerPage}
+        />
+      )}
     </div>
   );
 };

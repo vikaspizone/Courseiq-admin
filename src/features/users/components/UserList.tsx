@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Pencil, Trash2, Plus, Eye, Users, UserCheck, Shield, Calendar, Search, Filter, Mail, Minus, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react';
 import { AppLoader } from '@/features/common/components/AppLoader';
+import { Pagination } from '@/features/common/components/Pagination';
 import { useUserList } from '../hooks/useUserList';
 import { useLanguage } from '@/features/common/lang/contexts/LanguageContext';
 import { USER_STRINGS } from '../constants';
@@ -18,7 +19,7 @@ import { PermissionGuard } from '@/features/auth/components/PermissionGuard';
 import { useAuth } from '@/features/auth/contexts/AuthContext';
 
 export const UserList: React.FC = () => {
-  const { users, loading, handleDelete } = useUserList();
+  const { users, loading, handleDelete, page, setPage, pagination } = useUserList();
   const { language } = useLanguage();
   const strings = USER_STRINGS[language];
   const [searchTerm, setSearchTerm] = useState('');
@@ -315,24 +316,15 @@ export const UserList: React.FC = () => {
           </table>
         </div>
 
-        {/* Footer / Pagination */}
-        <div className="p-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50/30">
-           <p className="text-sm text-gray-500 font-medium">
-             Showing 1 to {filteredUsers.length} of {filteredUsers.length} users
-           </p>
-           
-           <div className="flex items-center gap-1">
-             <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 bg-white hover:bg-gray-50 disabled:opacity-50">
-               <ChevronLeft className="w-4 h-4" />
-             </button>
-             <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white font-medium text-sm shadow-sm hover:bg-blue-700 transition-colors">
-               1
-             </button>
-             <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 bg-white hover:bg-gray-50 disabled:opacity-50">
-               <ChevronRight className="w-4 h-4" />
-             </button>
-           </div>
-        </div>
+        {pagination && (
+          <Pagination 
+            currentPage={pagination.currentPage || page} 
+            totalPages={pagination.totalPages || 1} 
+            onPageChange={setPage}
+            totalItems={pagination.totalItems}
+            itemsPerPage={pagination.itemsPerPage}
+          />
+        )}
       </div>
     </div>
   );

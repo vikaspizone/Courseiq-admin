@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { AUTH_STRINGS } from "../constants";
 import { useLanguage } from "@/features/common/lang/contexts/LanguageContext";
 import { AppLoader } from "@/features/common/components/AppLoader";
-import { ROUTES } from "@/features/common/constants/routes";
+import { ROUTES } from '@/features/common/constants/routes';
 
 export function ForgotPasswordForm() {
     const { language } = useLanguage();

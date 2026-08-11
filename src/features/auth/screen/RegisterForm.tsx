@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/features/common/lang/contexts/LanguageContext";
 import { AUTH_STRINGS } from "../constants";
 import { AppLoader } from "@/features/common/components/AppLoader";
-import { ROUTES } from "@/features/common/constants/routes";
+import { ROUTES } from '@/features/common/constants/routes';
 import { useRegister } from "../hooks/useRegister";
 
 export function RegisterForm() {
