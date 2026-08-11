@@ -11,7 +11,7 @@ export interface CourseCategoryTranslation {
 
 export interface CourseCategory {
   id: string;
-  status: string;
+  is_active?: boolean;
   parent_id?: string | null;
   title?: string;
   description?: string;
@@ -21,7 +21,7 @@ export interface CourseCategory {
 }
 
 export interface CourseCategoryPayload {
-  status: string;
+  is_active: boolean;
   parent_id?: string | null;
   translations: CourseCategoryTranslation[];
 }

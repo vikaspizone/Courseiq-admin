@@ -74,7 +74,7 @@ export const CourseCategoryForm: React.FC<CourseCategoryFormProps> = ({ initialD
               title_hi: initTitleHi,
               description_en: initDescEn,
               description_hi: initDescHi,
-              status: initialData?.status || 'active',
+              is_active: initialData?.is_active ?? true,
             }}
             validationSchema={isEditing ? getUpdateCategorySchema(strings) : getCreateCategorySchema(strings)}
             onSubmit={handleSubmit}
@@ -177,8 +177,8 @@ export const CourseCategoryForm: React.FC<CourseCategoryFormProps> = ({ initialD
                        <label className="flex items-center gap-2 p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                           <Field
                             type="radio"
-                            name="status"
-                            value="active"
+                            name="is_active"
+                            value="true"
                             className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                           />
                           <span className="text-sm font-medium text-gray-700">Active</span>
@@ -186,8 +186,8 @@ export const CourseCategoryForm: React.FC<CourseCategoryFormProps> = ({ initialD
                        <label className="flex items-center gap-2 p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                           <Field
                             type="radio"
-                            name="status"
-                            value="inactive"
+                            name="is_active"
+                            value="false"
                             className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                           />
                           <span className="text-sm font-medium text-gray-700">Inactive</span>

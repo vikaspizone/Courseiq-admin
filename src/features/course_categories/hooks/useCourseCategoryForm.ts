@@ -29,7 +29,7 @@ export const useCourseCategoryForm = (initialData?: CourseCategory) => {
       }
 
       const payload: any = {
-        status: values.status,
+        is_active: values.is_active === true || String(values.is_active) === 'true',
         translations
       };
 

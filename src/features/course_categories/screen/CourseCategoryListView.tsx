@@ -87,9 +87,9 @@ export const CourseCategoryListView: React.FC = () => {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium border shadow-sm ${
-                        category.status === 'active' ? 'text-green-700 bg-green-50 border-green-200' : 'text-gray-700 bg-gray-50 border-gray-200'
+                        category.is_active ? 'text-green-700 bg-green-50 border-green-200' : 'text-gray-700 bg-gray-50 border-gray-200'
                       }`}>
-                        {category.status}
+                        {category.is_active ? 'Active' : 'Inactive'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-gray-500">

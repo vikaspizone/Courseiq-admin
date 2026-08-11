@@ -13,9 +13,7 @@ export const getCreateCategorySchema = (strings: any) => Yup.object().shape({
   description_hi: Yup.string()
     .max(500, strings.ERR_DESC_MAX)
     .nullable(),
-  status: Yup.string()
-    .oneOf(['active', 'inactive'])
-    .default('active')
+  is_active: Yup.boolean().optional()
 });
 
 export const getUpdateCategorySchema = (strings: any) => getCreateCategorySchema(strings);
