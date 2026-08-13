@@ -10,19 +10,12 @@ import { useRouter } from 'next/navigation';
 import { useDashboard } from "@/features/dashboard/hooks/useDashboard";
 import { Header } from "@/features/common/header/components/Header";
 import { NavigationMenu } from "@/features/common/header/components/NavigationMenu";
-import { useRouteGuard } from "@/features/auth/hooks/useRouteGuard";
 import { AccessDenied } from "@/features/auth/components/AccessDenied";
+import { useDashboardLayout } from "../hooks/useDashboardLayout";
 
 export function DashboardLayoutWrapper({ children }: { children: React.ReactNode }) {
   const { userEmail, userProfile, isSidebarOpen, setIsSidebarOpen, handleLogout } = useDashboard();
-  const { isAccessDenied, authLoading, firstAccessibleRoute } = useRouteGuard();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isAccessDenied && firstAccessibleRoute) {
-      router.push(firstAccessibleRoute);
-    }
-  }, [isAccessDenied, firstAccessibleRoute, router]);
+  const { isAccessDenied, authLoading, firstAccessibleRoute } = useDashboardLayout();
 
   if (!userEmail || authLoading) {
     return (

@@ -4,41 +4,26 @@
  * Course Form Component
  * Tabbed interface for creating/editing courses.
  */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import { Course } from '../types';
 import { ArrowLeft, Save, FileText, Lightbulb, Link as LinkIcon, DollarSign, BookOpen, ImageIcon, Settings, Globe, Plus, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useCourseForm } from '../hooks/useCourseForm';
+import { useCourseFormState } from '../hooks/useCourseFormState';
 import { getCourseSchema } from '../validation';
 import { COURSE_STRINGS } from '../constants';
 import { ROUTES } from '@/features/common/constants/routes';
-import { getCourseCategories } from '@/features/course_categories/api';
-import { CourseCategory } from '@/features/course_categories/types';
 
 interface CourseFormProps {
   initialData?: Course;
 }
 
 export const CourseForm: React.FC<CourseFormProps> = ({ initialData }) => {
-  const [categories, setCategories] = useState<CourseCategory[]>([]);
-  const [activeTab, setActiveTab] = useState<'basic' | 'content' | 'media' | 'pricing'>('basic');
-  const [contentLang, setContentLang] = useState<'en' | 'hi'>('en');
+  const { categories, activeTab, setActiveTab, contentLang, setContentLang } = useCourseFormState();
 
   const { isEditing, handleSubmit } = useCourseForm(initialData);
   const strings = COURSE_STRINGS['en']; // Hardcoding 'en' for now
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await getCourseCategories(1, 100);
-        setCategories(res.items || []);
-      } catch (err) {
-        console.error('Failed to fetch categories', err);
-      }
-    };
-    fetchCategories();
-  }, []);
 
   const getTranslationData = (langCode: string, field: 'title' | 'description' | 'overview') => {
     if (initialData?.translations && initialData.translations.length > 0) {
