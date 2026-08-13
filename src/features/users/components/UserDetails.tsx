@@ -287,7 +287,9 @@ export const UserDetails: React.FC<UserDetailsProps> = ({ user }) => {
                      <div>
                        <p className="text-xs font-medium text-gray-500">{strings.LABEL_LANGUAGES}</p>
                        <p className="text-sm font-semibold text-gray-900 mt-0.5">
-                         {user.languages && user.languages.length > 0 ? user.languages.join(', ') : 'N/A'}
+                         {Array.isArray(user.languages) && user.languages.length > 0 
+                            ? user.languages.join(', ') 
+                            : (user.languages || 'N/A')}
                        </p>
                      </div>
                   </div>

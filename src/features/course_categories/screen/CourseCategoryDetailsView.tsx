@@ -1,27 +1,26 @@
 'use client';
 
 /**
- * User Details View.
- * Screen component for viewing user details.
+ * Course Category Details View.
  */
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { UserDetails } from '../components/UserDetails';
-import { User } from '../types';
-import { getUserById } from '../api/userApi';
+import { CourseCategoryDetails } from '../components/CourseCategoryDetails';
+import { CourseCategory } from '../types';
+import { getCourseCategoryById } from '../api';
 
-export const UserDetailsView: React.FC = () => {
+export const CourseCategoryDetailsView: React.FC = () => {
   const params = useParams();
   const id = params.id as string;
-  const [data, setData] = useState<User | null>(null);
+  const [data, setData] = useState<CourseCategory | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await getUserById(id);
-        setData(((response as any).data || response) as User);
+        const response = await getCourseCategoryById(id);
+        setData(response.data || response);
       } catch (error) {
         console.error('Failed to load details', error);
       } finally {
@@ -41,8 +40,9 @@ export const UserDetailsView: React.FC = () => {
 
   return (
     <div className="w-full">
-      <UserDetails user={data} />
+      <CourseCategoryDetails data={data} />
     </div>
   );
 };
+
 

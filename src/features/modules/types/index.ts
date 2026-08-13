@@ -17,6 +17,7 @@ export interface Module {
   icon?: string;
   route?: string;
   sort_order?: number;
+  parent_id?: string;
   translations?: Translation[];
   created_at: string;
   updated_at?: string;

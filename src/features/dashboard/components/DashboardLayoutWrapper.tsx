@@ -53,7 +53,7 @@ export function DashboardLayoutWrapper({ children }: { children: React.ReactNode
           isSidebarOpen={isSidebarOpen}
           onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
         />
-        <main className="w-full">
+        <main className="w-full p-4 sm:p-6 lg:p-8">
           {mainContent}
         </main>
       </div>

@@ -3,13 +3,12 @@
  * Next.js page component for editing a course category.
  */
 import React from 'react';
-import { CourseCategoryEditView } from '@/features/course_categories/screen/CourseCategoryEditView';
+import { CourseCategoryDetailsView } from '@/features/course_categories/screen/CourseCategoryDetailsView';
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
+export const metadata = {
+  title: 'View CourseCategory | Dashboard',
+};
 
-export default async function EditCourseCategoryPage({ params }: PageProps) {
-  const { id } = await params;
-  return <CourseCategoryEditView />;
+export default function ViewCourseCategoryPage() {
+  return <CourseCategoryDetailsView />;
 }

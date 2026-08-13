@@ -6,7 +6,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Pencil, Trash2, Plus, FolderOpen } from 'lucide-react';
+import { Pencil, Trash2, Plus, ArrowLeft, Eye, FolderOpen } from 'lucide-react';
 import { AppLoader } from '@/features/common/components/AppLoader';
 import { Pagination } from '@/features/common/components/Pagination';
 import { ROUTES } from '@/features/common/constants/routes';
@@ -98,6 +98,13 @@ export const CourseCategoryListView: React.FC = () => {
                     <td className="px-6 py-4 text-right space-x-1">
                       <Link
                         href={`${ROUTES.COURSE_CATEGORY}/${category.id}`}
+                        className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors ml-2"
+                        title="View Category"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Link>
+                      <Link
+                        href={`${ROUTES.COURSE_CATEGORY}/${category.id}/edit`}
                         className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors ml-2"
                         title={strings.EDIT_TITLE}
                       >

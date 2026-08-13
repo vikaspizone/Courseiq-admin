@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Pencil, Trash2, Plus, Shield, Search, Filter, ShieldCheck, ShieldAlert, Calendar, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react';
+import { Pencil, Trash2, Plus, Shield, Search, Filter, ShieldCheck, ShieldAlert, Calendar, ChevronLeft, ChevronRight, ArrowUpDown, Eye } from 'lucide-react';
 import { AppLoader } from '@/features/common/components/AppLoader';
 import { Pagination } from '@/features/common/components/Pagination';
 import { useRoleList } from '../hooks/useRoleList';
@@ -242,6 +242,15 @@ export const RoleList: React.FC = () => {
                       {hasActionPermission && (
                         <td className="px-6 py-4 text-right">
                            <div className="flex items-center justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                              <PermissionGuard moduleId={moduleId} action="view_details">
+                                <Link
+                                  href={`/role/${role.id}`}
+                                  className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 flex items-center justify-center transition-colors"
+                                  title="View Role"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Link>
+                              </PermissionGuard>
                               <PermissionGuard moduleId={moduleId} action="edit">
                                 <Link
                                   href={`/role/${role.id}/edit`}

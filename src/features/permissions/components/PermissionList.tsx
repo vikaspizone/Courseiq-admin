@@ -7,7 +7,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Pencil, Trash2, Plus } from 'lucide-react';
+import { Pencil, Trash2, Plus, Eye } from 'lucide-react';
 import { AppLoader } from '@/features/common/components/AppLoader';
 import { Pagination } from '@/features/common/components/Pagination';
 import { usePermissionList } from '../hooks/usePermissionList';
@@ -81,6 +81,15 @@ export const PermissionList: React.FC = () => {
                     </td>
                     {hasActionPermission && (
                       <td className="px-6 py-4 text-right space-x-2">
+                        <PermissionGuard moduleId={moduleId} action="view_details">
+                          <Link
+                            href={`/permission/${permission.id}`}
+                            className="inline-flex p-2 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                            title="View Permission"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Link>
+                        </PermissionGuard>
                         <PermissionGuard moduleId={moduleId} action="edit">
                           <Link
                             href={`/permission/${permission.id}/edit`}

@@ -15,8 +15,9 @@ export function useModuleDetails(id: string) {
     const fetchModule = async () => {
       setLoading(true);
       try {
-        const data = await getModuleById(id);
-        setModule(data || null);
+        const response = await getModuleById(id);
+        // @ts-ignore
+        setModule(response.data || response || null);
       } catch (error) {
         console.error('Failed to fetch module details', error);
       } finally {

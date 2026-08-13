@@ -7,7 +7,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Pencil, Trash2, Plus, GripVertical } from "lucide-react";
+import { Pencil, Trash2, Plus, ArrowUpDown, ChevronLeft, ChevronRight, Search, Layout, Settings, Eye, GripVertical } from 'lucide-react';
 import { AppLoader } from "@/features/common/components/AppLoader";
 import { Pagination } from "@/features/common/components/Pagination";
 import { useModuleList } from "../hooks/useModuleList";
@@ -139,6 +139,15 @@ export const ModuleList: React.FC = () => {
                     </td>
                     {hasActionPermission && (
                       <td className="px-6 py-4 text-right space-x-1">
+                        <PermissionGuard moduleId={moduleId} action="view_details">
+                          <Link
+                            href={`/module/${module.id}`}
+                            className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors ml-2"
+                            title="View Module"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Link>
+                        </PermissionGuard>
                         <PermissionGuard moduleId={moduleId} action="edit">
                           <Link
                             href={`/module/${module.id}/edit`}

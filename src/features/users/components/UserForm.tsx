@@ -64,6 +64,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
             gender: initialData?.gender || 'male',
             date_of_birth: initialData?.date_of_birth || '',
             experience: initialData?.experience || 0,
+            languages: Array.isArray(initialData?.languages) ? initialData.languages.join(', ') : (initialData?.languages || ''),
             qualification: {
               degree: initialData?.qualification?.degree || '',
               year: initialData?.qualification?.year || new Date().getFullYear()

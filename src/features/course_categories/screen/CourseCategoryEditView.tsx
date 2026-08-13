@@ -20,8 +20,9 @@ export const CourseCategoryEditView: React.FC = () => {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const data = await getCourseCategoryById(id);
-        setCategory(data);
+        const response = await getCourseCategoryById(id);
+        // @ts-ignore
+        setCategory(response.data || response || null);
       } catch (error) {
         console.error('Failed to load category', error);
       } finally {

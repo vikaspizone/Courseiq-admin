@@ -7,9 +7,9 @@ import React from 'react';
 import { UserDetailsView } from '@/features/users/screen/UserDetailsView';
 
 export const metadata = {
-  title: 'User Details | Dashboard',
+  title: 'View User | Dashboard',
 };
 
-export default function UserDetailsPage() {
+export default function ViewUserPage() {
   return <UserDetailsView />;
 }

@@ -16,5 +16,6 @@ export const API_ENDPOINTS = {
   ROLE_PERMISSIONS: '/role-permissions',
   ROLES: '/roles',
   USERS: '/users',
+  COURSE: '/courses',
   // Add other API endpoints here as needed
 };

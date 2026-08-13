@@ -102,7 +102,7 @@ export function NavigationMenu({ isOpen, onToggle }: NavigationMenuProps) {
             dynamicItems.map((item) => {
               const Icon = (LucideIcons as any)[item.iconName] || LucideIcons.Grid;
               const href = item.href;
-              const is_active = pathname?.startsWith(href);
+              const is_active = pathname === href || pathname?.startsWith(`${href}/`);
               
               return (
                 <Link 
