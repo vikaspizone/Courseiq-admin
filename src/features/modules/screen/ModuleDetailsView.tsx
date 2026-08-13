@@ -9,8 +9,10 @@ import { useParams } from 'next/navigation';
 import { ModuleDetails } from '../components/ModuleDetails';
 import { Module } from '../types';
 import { getModuleById } from '../api';
+import { MODULE_STRINGS } from '../constants';
 
 export const ModuleDetailsView: React.FC = () => {
+  const strings = MODULE_STRINGS['en'];
   const params = useParams();
   const id = params.id as string;
   const [data, setData] = useState<Module | null>(null);
@@ -20,7 +22,7 @@ export const ModuleDetailsView: React.FC = () => {
     const loadData = async () => {
       try {
         const response = await getModuleById(id);
-        setData(response.data || response);
+        setData((response as any)?.data || response);
       } catch (error) {
         console.error('Failed to load details', error);
       } finally {
@@ -35,7 +37,7 @@ export const ModuleDetailsView: React.FC = () => {
   }
 
   if (!data) {
-    return <div className="p-8 text-center text-gray-500">Not found.</div>;
+    return <div className="p-8 text-center text-gray-500">{strings.NOT_FOUND}</div>;
   }
 
   return (

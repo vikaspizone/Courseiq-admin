@@ -8,6 +8,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Module } from '../types';
 import { ROUTES } from '@/features/common/constants/routes';
+import { MODULE_STRINGS } from '../constants';
 import { ArrowLeft, Pencil, Layout, Link as LinkIcon, Component, Compass, Grid3X3, Hash, Calendar, Clock, Fingerprint, Layers } from 'lucide-react';
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export const ModuleDetails: React.FC<Props> = ({ data }) => {
+  const strings = MODULE_STRINGS['en'];
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleString('en-US', {
@@ -32,16 +34,16 @@ export const ModuleDetails: React.FC<Props> = ({ data }) => {
             className="text-blue-600 hover:text-blue-700 flex items-center text-sm font-medium transition-colors mb-3 w-max"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Modules
+            {strings.BACK_TO_MODULES}
           </Link>
           <div className="flex items-center gap-2">
             <h2 className="text-3xl font-bold text-gray-900">
-              Module Details
+              {strings.DETAILS_TITLE}
             </h2>
             <Layout className="w-6 h-6 text-pink-500" />
           </div>
           <p className="text-sm text-gray-500 mt-1">
-            Viewing details for <span className="font-semibold text-blue-600">{data.name}</span>.
+            {strings.VIEWING_DETAILS} <span className="font-semibold text-blue-600">{data.name}</span>.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -50,7 +52,7 @@ export const ModuleDetails: React.FC<Props> = ({ data }) => {
             className="inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-5 shadow-sm"
           >
             <Pencil className="w-4 h-4 mr-2" />
-            Edit Module
+            {strings.EDIT_TITLE}
           </Link>
         </div>
       </div>
@@ -75,7 +77,7 @@ export const ModuleDetails: React.FC<Props> = ({ data }) => {
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold text-gray-900 capitalize">{data.name}</h3>
                 <div className="mt-2 text-sm text-gray-500">
-                  Routing path configured in system
+                  {strings.ROUTING_PATH_INFO}
                 </div>
               </div>
 
@@ -87,7 +89,7 @@ export const ModuleDetails: React.FC<Props> = ({ data }) => {
                      <Hash className="w-5 h-5" />
                    </div>
                    <div>
-                     <p className="text-xs font-medium text-gray-500 uppercase">Sequence</p>
+                     <p className="text-xs font-medium text-gray-500 uppercase">{strings.SEQUENCE}</p>
                      <p className="text-sm font-semibold text-gray-900">{data.sort_order || '0'}</p>
                    </div>
                 </div>
@@ -97,8 +99,8 @@ export const ModuleDetails: React.FC<Props> = ({ data }) => {
                      <Layers className="w-5 h-5" />
                    </div>
                    <div>
-                     <p className="text-xs font-medium text-gray-500 uppercase">Hierarchy</p>
-                     <p className="text-sm font-semibold text-gray-900">{data.parent_id ? 'Sub-Module' : 'Root Module'}</p>
+                     <p className="text-xs font-medium text-gray-500 uppercase">{strings.HIERARCHY}</p>
+                     <p className="text-sm font-semibold text-gray-900">{data.parent_id ? strings.SUB_MODULE : strings.ROOT_MODULE}</p>
                    </div>
                 </div>
 
@@ -108,7 +110,7 @@ export const ModuleDetails: React.FC<Props> = ({ data }) => {
                        <Calendar className="w-5 h-5" />
                      </div>
                      <div>
-                       <p className="text-xs font-medium text-gray-500 uppercase">Created</p>
+                       <p className="text-xs font-medium text-gray-500 uppercase">{strings.LABEL_CREATED}</p>
                        <p className="text-sm font-semibold text-gray-900">{formatDate(data.created_at)}</p>
                      </div>
                   </div>
@@ -120,7 +122,7 @@ export const ModuleDetails: React.FC<Props> = ({ data }) => {
                        <Clock className="w-5 h-5" />
                      </div>
                      <div>
-                       <p className="text-xs font-medium text-gray-500 uppercase">Last Updated</p>
+                       <p className="text-xs font-medium text-gray-500 uppercase">{strings.LAST_UPDATED}</p>
                        <p className="text-sm font-semibold text-gray-900">{formatDate(data.updated_at)}</p>
                      </div>
                   </div>
@@ -137,7 +139,7 @@ export const ModuleDetails: React.FC<Props> = ({ data }) => {
              <div className="border-b border-gray-100 px-6 pt-6">
                 <div className="flex items-center gap-2 pb-4 border-b-2 border-pink-500 w-max">
                   <Grid3X3 className="w-5 h-5 text-pink-500" />
-                  <h3 className="text-sm font-bold text-gray-900">Module Configuration</h3>
+                  <h3 className="text-sm font-bold text-gray-900">{strings.MODULE_CONFIG}</h3>
                 </div>
              </div>
 
@@ -146,24 +148,24 @@ export const ModuleDetails: React.FC<Props> = ({ data }) => {
                   <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-2">
                        <LinkIcon className="w-4 h-4 text-blue-500" />
-                       <h4 className="text-sm font-bold text-gray-700">Frontend Route</h4>
+                       <h4 className="text-sm font-bold text-gray-700">{strings.FRONTEND_ROUTE}</h4>
                     </div>
-                    <p className="text-sm font-mono text-gray-900 bg-white p-2 rounded border border-gray-200 w-max">{data.route || 'No Route'}</p>
+                    <p className="text-sm font-mono text-gray-900 bg-white p-2 rounded border border-gray-200 w-max">{data.route || strings.NO_ROUTE}</p>
                   </div>
                   
                   <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-2">
                        <Compass className="w-4 h-4 text-purple-500" />
-                       <h4 className="text-sm font-bold text-gray-700">Icon System Name</h4>
+                       <h4 className="text-sm font-bold text-gray-700">{strings.ICON_SYSTEM_NAME}</h4>
                     </div>
-                    <p className="text-sm text-gray-900 font-mono break-all">{data.icon || 'Default'}</p>
+                    <p className="text-sm text-gray-900 font-mono break-all">{data.icon || strings.DEFAULT}</p>
                   </div>
                   
                   {data.parent_id && (
                     <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-center sm:col-span-2">
                       <div className="flex items-center gap-2 mb-2">
                          <Component className="w-4 h-4 text-indigo-500" />
-                         <h4 className="text-sm font-bold text-gray-700">Parent Module Mapping</h4>
+                         <h4 className="text-sm font-bold text-gray-700">{strings.PARENT_MODULE_MAPPING}</h4>
                       </div>
                       <p className="text-sm text-indigo-700 font-semibold bg-indigo-50 p-2 border border-indigo-100 rounded break-all">
                         {/* @ts-ignore */}
@@ -177,7 +179,7 @@ export const ModuleDetails: React.FC<Props> = ({ data }) => {
                     <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-center">
                       <div className="flex items-center gap-2 mb-2">
                          <Layers className="w-4 h-4 text-emerald-500" />
-                         <h4 className="text-sm font-bold text-gray-700">Status</h4>
+                         <h4 className="text-sm font-bold text-gray-700">{strings.LABEL_STATUS}</h4>
                       </div>
                       {/* @ts-ignore */}
                       <p className="text-sm text-gray-900 font-mono break-all">{data.status}</p>

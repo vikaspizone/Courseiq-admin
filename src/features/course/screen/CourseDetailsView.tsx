@@ -9,8 +9,10 @@ import { useParams } from 'next/navigation';
 import { CourseDetails } from '../components/CourseDetails';
 import { Course } from '../types';
 import { getCourseById } from '../api';
+import { COURSE_STRINGS } from '../constants';
 
 export const CourseDetailsView: React.FC = () => {
+  const strings = COURSE_STRINGS['en'];
   const params = useParams();
   const id = params.id as string;
   const [data, setData] = useState<Course | null>(null);
@@ -20,7 +22,7 @@ export const CourseDetailsView: React.FC = () => {
     const loadData = async () => {
       try {
         const response = await getCourseById(id);
-        setData(response.data || response);
+        setData((response as any)?.data || response);
       } catch (error) {
         console.error('Failed to load details', error);
       } finally {
@@ -35,7 +37,7 @@ export const CourseDetailsView: React.FC = () => {
   }
 
   if (!data) {
-    return <div className="p-8 text-center text-gray-500">Not found.</div>;
+    return <div className="p-8 text-center text-gray-500">{strings.NOT_FOUND}</div>;
   }
 
   return (

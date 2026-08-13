@@ -14,6 +14,8 @@ export interface Permission {
   id: string;
   name?: string;
   code?: string;
+  action?: string;
+  module_id?: string;
   is_active?: boolean;
   translations?: Translation[];
   created_at: string;
@@ -22,6 +24,8 @@ export interface Permission {
 
 export interface PermissionPayload {
   code: string;
+  action?: string;
+  module_id?: string;
   is_active: boolean;
   translations: {
     languageCode: string;

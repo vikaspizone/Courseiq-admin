@@ -8,6 +8,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Permission } from '../types';
 import { ROUTES } from '@/features/common/constants/routes';
+import { PERMISSION_STRINGS } from '../constants';
 import { ArrowLeft, Pencil, KeyRound, Component, ShieldCheck, PlayCircle, Settings, Box, Calendar, Clock, Fingerprint } from 'lucide-react';
 
 interface Props {
@@ -15,8 +16,9 @@ interface Props {
 }
 
 export const PermissionDetails: React.FC<Props> = ({ data }) => {
+  const strings = PERMISSION_STRINGS['en'];
   const formatDate = (dateString?: string) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return strings.N_A;
     return new Date(dateString).toLocaleString('en-US', {
       month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
     });
@@ -32,16 +34,16 @@ export const PermissionDetails: React.FC<Props> = ({ data }) => {
             className="text-blue-600 hover:text-blue-700 flex items-center text-sm font-medium transition-colors mb-3 w-max"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Permissions
+            {strings.BACK_TO_PERMISSIONS}
           </Link>
           <div className="flex items-center gap-2">
             <h2 className="text-3xl font-bold text-gray-900">
-              Permission Details
+              {strings.DETAILS_TITLE}
             </h2>
             <KeyRound className="w-6 h-6 text-emerald-500" />
           </div>
           <p className="text-sm text-gray-500 mt-1">
-            Viewing details for <span className="font-semibold text-blue-600">{data.name}</span>.
+            {strings.VIEWING_DETAILS} <span className="font-semibold text-blue-600">{data.name}</span>.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -50,7 +52,7 @@ export const PermissionDetails: React.FC<Props> = ({ data }) => {
             className="inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-5 shadow-sm"
           >
             <Pencil className="w-4 h-4 mr-2" />
-            Edit Permission
+            {strings.EDIT_TITLE}
           </Link>
         </div>
       </div>
@@ -75,7 +77,7 @@ export const PermissionDetails: React.FC<Props> = ({ data }) => {
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold text-gray-900 capitalize">{data.name}</h3>
                 <div className="mt-2 text-sm text-gray-500 font-mono">
-                  Action: {data.action || 'Undefined'}
+                  {strings.LABEL_ACTION}: {data.action || strings.UNDEFINED}
                 </div>
               </div>
 
@@ -87,8 +89,8 @@ export const PermissionDetails: React.FC<Props> = ({ data }) => {
                      <Box className="w-5 h-5" />
                    </div>
                    <div>
-                     <p className="text-xs font-medium text-gray-500 uppercase">Module Mapping</p>
-                     <p className="text-xs font-mono font-semibold text-gray-900 truncate max-w-[150px]">{data.module_id || 'N/A'}</p>
+                     <p className="text-xs font-medium text-gray-500 uppercase">{strings.MODULE_MAPPING}</p>
+                     <p className="text-xs font-mono font-semibold text-gray-900 truncate max-w-[150px]">{data.module_id || strings.N_A}</p>
                    </div>
                 </div>
 
@@ -98,7 +100,7 @@ export const PermissionDetails: React.FC<Props> = ({ data }) => {
                        <Calendar className="w-5 h-5" />
                      </div>
                      <div>
-                       <p className="text-xs font-medium text-gray-500 uppercase">Created</p>
+                       <p className="text-xs font-medium text-gray-500 uppercase">{strings.LABEL_CREATED}</p>
                        <p className="text-sm font-semibold text-gray-900">{formatDate(data.created_at)}</p>
                      </div>
                   </div>
@@ -110,7 +112,7 @@ export const PermissionDetails: React.FC<Props> = ({ data }) => {
                        <Clock className="w-5 h-5" />
                      </div>
                      <div>
-                       <p className="text-xs font-medium text-gray-500 uppercase">Last Updated</p>
+                       <p className="text-xs font-medium text-gray-500 uppercase">{strings.LAST_UPDATED}</p>
                        <p className="text-sm font-semibold text-gray-900">{formatDate(data.updated_at)}</p>
                      </div>
                   </div>
@@ -127,7 +129,7 @@ export const PermissionDetails: React.FC<Props> = ({ data }) => {
              <div className="border-b border-gray-100 px-6 pt-6">
                 <div className="flex items-center gap-2 pb-4 border-b-2 border-emerald-500 w-max">
                   <ShieldCheck className="w-5 h-5 text-emerald-500" />
-                  <h3 className="text-sm font-bold text-gray-900">Access Information</h3>
+                  <h3 className="text-sm font-bold text-gray-900">{strings.ACCESS_INFO}</h3>
                 </div>
              </div>
 
@@ -136,14 +138,14 @@ export const PermissionDetails: React.FC<Props> = ({ data }) => {
                   <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-2">
                        <PlayCircle className="w-4 h-4 text-blue-500" />
-                       <h4 className="text-sm font-bold text-gray-700">System Action</h4>
+                       <h4 className="text-sm font-bold text-gray-700">{strings.SYSTEM_ACTION}</h4>
                     </div>
                     <p className="text-sm font-mono text-gray-900 bg-white p-2 rounded border border-gray-200 w-max">{data.action}</p>
                   </div>
                   <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-2">
                        <Component className="w-4 h-4 text-purple-500" />
-                       <h4 className="text-sm font-bold text-gray-700">Module Association</h4>
+                       <h4 className="text-sm font-bold text-gray-700">{strings.MODULE_ASSOCIATION}</h4>
                     </div>
                     <p className="text-sm text-gray-900 font-mono break-all">{data.module_id}</p>
                   </div>
@@ -152,7 +154,7 @@ export const PermissionDetails: React.FC<Props> = ({ data }) => {
                     <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 flex flex-col justify-center sm:col-span-2">
                       <div className="flex items-center gap-2 mb-2">
                          <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                         <h4 className="text-sm font-bold text-gray-700">Guard Config</h4>
+                         <h4 className="text-sm font-bold text-gray-700">{strings.GUARD_CONFIG}</h4>
                       </div>
                       {/* @ts-ignore */}
                       <p className="text-sm text-gray-900 font-mono">{data.guard_name}</p>
@@ -162,10 +164,10 @@ export const PermissionDetails: React.FC<Props> = ({ data }) => {
                 
                 <div>
                    <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-                     <Settings className="w-4 h-4 text-gray-400" /> Configuration Note
+                     <Settings className="w-4 h-4 text-gray-400" /> {strings.CONFIG_NOTE}
                    </h4>
                    <div className="text-sm text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-100 leading-relaxed whitespace-pre-wrap">
-                     Permissions dictate the exact actions (e.g. create, read, update, delete) that a role can perform on a given module. Ensure you assign this permission to a Role for it to take effect on Users.
+                     {strings.CONFIG_DESC}
                    </div>
                 </div>
              </div>

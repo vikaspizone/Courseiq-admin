@@ -8,6 +8,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Role } from '../types';
 import { ROUTES } from '@/features/common/constants/routes';
+import { ROLE_STRINGS } from '../constants';
 import { ArrowLeft, Pencil, Shield, ShieldCheck, ShieldAlert, CheckCircle, Activity, LayoutList, Calendar, Clock, Lock, Key } from 'lucide-react';
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 
 export const RoleDetails: React.FC<Props> = ({ data }) => {
   const isActive = data.is_active;
+  const strings = ROLE_STRINGS['en'];
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'N/A';
@@ -34,16 +36,16 @@ export const RoleDetails: React.FC<Props> = ({ data }) => {
             className="text-blue-600 hover:text-blue-700 flex items-center text-sm font-medium transition-colors mb-3 w-max"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Roles
+            {strings.BACK_TO_ROLES}
           </Link>
           <div className="flex items-center gap-2">
             <h2 className="text-3xl font-bold text-gray-900">
-              Role Details
+              {strings.DETAILS_TITLE}
             </h2>
             <Shield className="w-6 h-6 text-orange-500" />
           </div>
           <p className="text-sm text-gray-500 mt-1">
-            Viewing details for <span className="font-semibold text-blue-600">{data.name}</span>.
+            {strings.VIEWING_DETAILS} <span className="font-semibold text-blue-600">{data.name}</span>.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -52,7 +54,7 @@ export const RoleDetails: React.FC<Props> = ({ data }) => {
             className="inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-5 shadow-sm"
           >
             <Pencil className="w-4 h-4 mr-2" />
-            Edit Role
+            {strings.EDIT_TITLE}
           </Link>
         </div>
       </div>
@@ -81,7 +83,7 @@ export const RoleDetails: React.FC<Props> = ({ data }) => {
                     isActive ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-50 text-gray-700 border-gray-200'
                   }`}>
                     {isActive ? <CheckCircle className="w-3.5 h-3.5 mr-1" /> : <ShieldAlert className="w-3.5 h-3.5 mr-1" />}
-                    {isActive ? 'Active' : 'Inactive'}
+                    {isActive ? strings.ACTIVE : strings.INACTIVE}
                   </span>
                 </div>
               </div>
@@ -94,7 +96,7 @@ export const RoleDetails: React.FC<Props> = ({ data }) => {
                        <Calendar className="w-5 h-5" />
                      </div>
                      <div>
-                       <p className="text-xs font-medium text-gray-500 uppercase">Created</p>
+                       <p className="text-xs font-medium text-gray-500 uppercase">{strings.LABEL_CREATED}</p>
                        <p className="text-sm font-semibold text-gray-900">{formatDate(data.created_at)}</p>
                      </div>
                   </div>
@@ -106,7 +108,7 @@ export const RoleDetails: React.FC<Props> = ({ data }) => {
                        <Clock className="w-5 h-5" />
                      </div>
                      <div>
-                       <p className="text-xs font-medium text-gray-500 uppercase">Last Updated</p>
+                       <p className="text-xs font-medium text-gray-500 uppercase">{strings.LAST_UPDATED}</p>
                        <p className="text-sm font-semibold text-gray-900">{formatDate(data.updated_at)}</p>
                      </div>
                   </div>
@@ -123,17 +125,17 @@ export const RoleDetails: React.FC<Props> = ({ data }) => {
              <div className="border-b border-gray-100 px-6 pt-6">
                 <div className="flex items-center gap-2 pb-4 border-b-2 border-orange-500 w-max">
                   <ShieldCheck className="w-5 h-5 text-orange-500" />
-                  <h3 className="text-sm font-bold text-gray-900">Role Context</h3>
+                  <h3 className="text-sm font-bold text-gray-900">{strings.ROLE_CONTEXT}</h3>
                 </div>
              </div>
 
              <div className="p-6 space-y-8">
                 <div>
                    <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-                     <LayoutList className="w-4 h-4 text-gray-400" /> Description
+                     <LayoutList className="w-4 h-4 text-gray-400" /> {strings.LABEL_DESC}
                    </h4>
                    <div className="text-sm text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-100 leading-relaxed whitespace-pre-wrap">
-                     The <span className="font-semibold capitalize">{data.name}</span> role provides access to specific modules and permissions as mapped in the system. Users assigned to this role will inherit all associated permissions.
+                     {strings.ROLE_INFO_PREFIX} <span className="font-semibold capitalize">{data.name}</span> {strings.ROLE_INFO_SUFFIX}
                    </div>
                 </div>
                 
@@ -141,7 +143,7 @@ export const RoleDetails: React.FC<Props> = ({ data }) => {
                 {data.permissions && Array.isArray(data.permissions) && (
                   <div>
                     <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-                      <Lock className="w-4 h-4 text-gray-400" /> Assigned Permissions
+                      <Lock className="w-4 h-4 text-gray-400" /> {strings.ASSIGNED_PERMISSIONS}
                     </h4>
                     {/* @ts-ignore */}
                     {data.permissions.length > 0 ? (
@@ -156,7 +158,7 @@ export const RoleDetails: React.FC<Props> = ({ data }) => {
                       </div>
                     ) : (
                       <div className="text-sm text-gray-500 italic bg-gray-50 p-4 rounded-xl border border-gray-100">
-                        No permissions are explicitly assigned to this role yet.
+                        {strings.NO_PERMISSIONS_ASSIGNED}
                       </div>
                     )}
                   </div>

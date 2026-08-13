@@ -22,6 +22,7 @@ export interface CoursePrice {
 export interface Course {
   id: string;
   category_id: string;
+  category?: any;
   type: string;
   level: string;
   slug: string;
@@ -31,6 +32,7 @@ export interface Course {
   topics: any;
   status: string;
   translations: CourseTranslation[];
+  price?: any;
   prices: CoursePrice[];
   created_at?: string;
   updated_at?: string;

@@ -8,7 +8,8 @@ import React from 'react';
 import Link from 'next/link';
 import { CourseCategory } from '../types';
 import { ROUTES } from '@/features/common/constants/routes';
-import { ArrowLeft, Pencil, FolderOpen, Tag, CheckCircle, ShieldAlert, FileText, Component, Fingerprint, Calendar, User as UserIcon } from 'lucide-react';
+import { ArrowLeft, Pencil, FolderOpen, Tag, CheckCircle, ShieldAlert, FileText, Component, Fingerprint, Calendar, User as UserIcon, Clock, Globe } from 'lucide-react';
+import { COURSE_CATEGORY_STRINGS } from '../constants';
 import { getTranslationData } from '@/features/common/utils/getTranslationData';
 
 interface Props {
@@ -16,8 +17,9 @@ interface Props {
 }
 
 export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
-  const title = getTranslationData(data, 'title') || data.title || 'Untitled Category';
-  const description = getTranslationData(data, 'description') || data.description || 'No description provided.';
+  const strings = COURSE_CATEGORY_STRINGS['en'];
+  const title = getTranslationData(data, 'title') || data.title || strings.UNTITLED_CATEGORY;
+  const description = getTranslationData(data, 'description') || data.description || strings.NO_DESC_PROVIDED;
   const isActive = data.is_active;
 
   const formatDate = (dateString?: string) => {
@@ -37,16 +39,16 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
             className="text-blue-600 hover:text-blue-700 flex items-center text-sm font-medium transition-colors mb-3 w-max"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Categories
+            {strings.BACK_TO_CATEGORIES}
           </Link>
           <div className="flex items-center gap-2">
             <h2 className="text-3xl font-bold text-gray-900">
-              Category Details
+              {strings.DETAILS_TITLE}
             </h2>
             <FolderOpen className="w-6 h-6 text-blue-500" />
           </div>
           <p className="text-sm text-gray-500 mt-1">
-            Viewing details for <span className="font-semibold text-blue-600">{title}</span>.
+            {strings.VIEWING_DETAILS} <span className="font-semibold text-blue-600">{title}</span>.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -55,7 +57,7 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
             className="inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-5 shadow-sm"
           >
             <Pencil className="w-4 h-4 mr-2" />
-            Edit Category
+            {strings.EDIT_TITLE}
           </Link>
         </div>
       </div>
@@ -84,7 +86,7 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
                     isActive ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-50 text-gray-700 border-gray-200'
                   }`}>
                     {isActive ? <CheckCircle className="w-3.5 h-3.5 mr-1" /> : <ShieldAlert className="w-3.5 h-3.5 mr-1" />}
-                    {isActive ? 'Active' : 'Inactive'}
+                    {isActive ? strings.ACTIVE : strings.INACTIVE}
                   </span>
                 </div>
               </div>
@@ -97,9 +99,9 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
                      <Component className="w-5 h-5" />
                    </div>
                    <div>
-                     <p className="text-xs font-medium text-gray-500 uppercase">Hierarchy</p>
+                     <p className="text-xs font-medium text-gray-500 uppercase">{strings.HIERARCHY}</p>
                      <p className="text-sm font-semibold text-gray-900">
-                       {data.parent_id ? 'Sub-Category' : 'Root Category'}
+                       {data.parent_id ? strings.SUB_CATEGORY : strings.ROOT_CATEGORY}
                      </p>
                    </div>
                 </div>
@@ -109,7 +111,7 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
                      <Calendar className="w-5 h-5" />
                    </div>
                    <div>
-                     <p className="text-xs font-medium text-gray-500 uppercase">Created</p>
+                     <p className="text-xs font-medium text-gray-500 uppercase">{strings.LABEL_CREATED}</p>
                      <p className="text-sm font-semibold text-gray-900">{formatDate(data.created_at)}</p>
                    </div>
                 </div>
@@ -121,7 +123,7 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
                        <Clock className="w-5 h-5" />
                      </div>
                      <div>
-                       <p className="text-xs font-medium text-gray-500 uppercase">Last Updated</p>
+                       <p className="text-xs font-medium text-gray-500 uppercase">{strings.LAST_UPDATED}</p>
                        <p className="text-sm font-semibold text-gray-900">{formatDate(data.updated_at)}</p>
                      </div>
                   </div>
@@ -139,14 +141,14 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
              <div className="border-b border-gray-100 px-6 pt-6">
                 <div className="flex items-center gap-2 pb-4 border-b-2 border-indigo-600 w-max">
                   <FileText className="w-5 h-5 text-indigo-600" />
-                  <h3 className="text-sm font-bold text-gray-900">Category Information</h3>
+                  <h3 className="text-sm font-bold text-gray-900">{strings.CATEGORY_INFO}</h3>
                 </div>
              </div>
 
              <div className="p-6 space-y-8">
                 <div>
                    <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-                     <FileText className="w-4 h-4 text-gray-400" /> Description
+                     <FileText className="w-4 h-4 text-gray-400" /> {strings.LABEL_DESC}
                    </h4>
                    <div className="text-sm text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-100 leading-relaxed whitespace-pre-wrap">
                      {description}
@@ -156,10 +158,10 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
                 {data.parent_id && (
                   <div>
                     <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-                      <FolderOpen className="w-4 h-4 text-gray-400" /> Parent Category
+                      <FolderOpen className="w-4 h-4 text-gray-400" /> {strings.PARENT_CATEGORY}
                     </h4>
                     <div className="p-4 rounded-xl border border-gray-200 bg-gray-50 flex flex-col justify-center w-full max-w-md">
-                      <p className="text-xs font-medium text-gray-500 mb-1">Category Name</p>
+                      <p className="text-xs font-medium text-gray-500 mb-1">{strings.CATEGORY_NAME}</p>
                       {/* @ts-ignore */}
                       <p className="text-sm font-semibold text-indigo-700 bg-indigo-50 p-2 rounded border border-indigo-100">
                         {/* @ts-ignore */}
@@ -173,18 +175,18 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
                 {data.created_by && (
                   <div>
                     <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-                      <UserIcon className="w-4 h-4 text-gray-400" /> Audit Trail
+                      <UserIcon className="w-4 h-4 text-gray-400" /> {strings.AUDIT_TRAIL}
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="p-3 rounded-lg border border-gray-100 bg-gray-50/50">
-                        <p className="text-xs font-medium text-gray-500">Created By (User ID)</p>
+                        <p className="text-xs font-medium text-gray-500">{strings.CREATED_BY}</p>
                         {/* @ts-ignore */}
                         <p className="text-sm font-mono text-gray-900 mt-1 truncate">{data.created_by}</p>
                       </div>
                       {/* @ts-ignore */}
                       {data.updated_by && (
                         <div className="p-3 rounded-lg border border-gray-100 bg-gray-50/50">
-                          <p className="text-xs font-medium text-gray-500">Last Updated By (User ID)</p>
+                          <p className="text-xs font-medium text-gray-500">{strings.LAST_UPDATED_BY}</p>
                           {/* @ts-ignore */}
                           <p className="text-sm font-mono text-gray-900 mt-1 truncate">{data.updated_by}</p>
                         </div>
@@ -200,7 +202,7 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
                <div className="border-b border-gray-100 px-6 pt-6">
                   <div className="flex items-center gap-2 pb-4 border-b-2 border-purple-500 w-max">
                     <Globe className="w-5 h-5 text-purple-500" />
-                    <h3 className="text-sm font-bold text-gray-900">Localization Data</h3>
+                    <h3 className="text-sm font-bold text-gray-900">{strings.LOCALIZATION_DATA}</h3>
                   </div>
                </div>
                
@@ -209,14 +211,14 @@ export const CourseCategoryDetails: React.FC<Props> = ({ data }) => {
                     {data.translations.map((t, idx) => (
                       <div key={idx} className="p-4 rounded-xl border border-gray-200 bg-white shadow-sm">
                         <div className="flex items-center justify-between mb-3 border-b border-gray-100 pb-2">
-                          <span className="font-semibold text-gray-900">Language</span>
+                          <span className="font-semibold text-gray-900">{strings.LABEL_LANGUAGE}</span>
                           <span className="uppercase font-mono text-xs font-bold px-2 py-1 bg-purple-50 text-purple-700 rounded-md border border-purple-200">
                             {t.languageCode}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-500 uppercase font-medium">Title</p>
+                        <p className="text-xs text-gray-500 uppercase font-medium">{strings.LABEL_TITLE}</p>
                         <p className="text-sm text-gray-900 font-semibold mb-2">{t.title}</p>
-                        <p className="text-xs text-gray-500 uppercase font-medium">Description</p>
+                        <p className="text-xs text-gray-500 uppercase font-medium">{strings.LABEL_DESC}</p>
                         <p className="text-sm text-gray-700 line-clamp-3" title={t.description}>{t.description || 'N/A'}</p>
                       </div>
                     ))}
