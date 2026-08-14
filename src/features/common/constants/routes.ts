@@ -21,5 +21,7 @@ export const ROUTES = {
   COURSE_CATEGORY_CREATE: '/course-category/create',
   COURSE: '/course',
   COURSE_CREATE: '/course/create',
+  COURSE_FAV: '/course/fav',
+  COURSE_RATING: '/course/rating',
   // Add other frontend routes here as needed
 };

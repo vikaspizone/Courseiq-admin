@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import Link from 'next/link';
-import { Pencil, Trash2, Plus, ArrowLeft, Eye, BookOpen } from 'lucide-react';
+import { Pencil, Trash2, Plus, ArrowLeft, Eye, BookOpen, Heart, Star } from 'lucide-react';
 import { AppLoader } from '@/features/common/components/AppLoader';
 import { Pagination } from '@/features/common/components/Pagination';
 import { ROUTES } from '@/features/common/constants/routes';
@@ -47,13 +47,15 @@ export function CourseListView() {
           </h2>
           <p className="text-sm text-gray-500 mt-1">{strings.DESC}</p>
         </div>
-        <Link
-          href={ROUTES.COURSE_CREATE}
-          className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-4 shadow-sm"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          {strings.ADD_COURSE}
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href={ROUTES.COURSE_CREATE}
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-4 shadow-sm"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {strings.ADD_COURSE}
+          </Link>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -64,13 +66,14 @@ export function CourseListView() {
                 <th className="px-6 py-4">{strings.TH_TITLE}</th>
                 <th className="px-6 py-4">{strings.TH_CATEGORY}</th>
                 <th className="px-6 py-4">{strings.TH_STATUS}</th>
+                <th className="px-6 py-4 text-center">Features</th>
                 <th className="px-6 py-4 text-right">{strings.TH_ACTIONS}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {courses.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
                     {strings.NO_COURSES}
                   </td>
                 </tr>
@@ -93,10 +96,28 @@ export function CourseListView() {
                           {course.status ? course.status.charAt(0).toUpperCase() + course.status.slice(1) : '-'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right space-x-1">
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center space-x-3">
+                          <Link
+                            href={`${ROUTES.COURSE_FAV}?courseId=${course.id}`}
+                            className="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 h-8 py-1 px-3 shadow-sm"
+                          >
+                            <Heart className="w-3.5 h-3.5 mr-1.5 text-red-500" />
+                            Favorites
+                          </Link>
+                          <Link
+                            href={`${ROUTES.COURSE_RATING}?courseId=${course.id}`}
+                            className="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 h-8 py-1 px-3 shadow-sm"
+                          >
+                            <Star className="w-3.5 h-3.5 mr-1.5 text-yellow-500" />
+                            Ratings
+                          </Link>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right space-x-1 flex justify-end items-center">
                         <Link
                           href={`${ROUTES.COURSE}/${course.id}`}
-                          className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors ml-2"
+                          className="inline-flex p-1.5 items-center justify-center rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors ml-1"
                           title="View Course"
                         >
                           <Eye className="w-4 h-4" />
