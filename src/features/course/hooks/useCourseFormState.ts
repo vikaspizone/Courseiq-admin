@@ -4,7 +4,7 @@ import { CourseCategory } from '@/features/course_categories/types';
 
 export const useCourseFormState = () => {
   const [categories, setCategories] = useState<CourseCategory[]>([]);
-  const [activeTab, setActiveTab] = useState<'basic' | 'content' | 'media' | 'pricing'>('basic');
+  const [activeTab, setActiveTab] = useState<'basic' | 'content' | 'media' | 'topics' | 'pricing'>('basic');
   const [contentLang, setContentLang] = useState<'en' | 'hi'>('en');
 
   useEffect(() => {

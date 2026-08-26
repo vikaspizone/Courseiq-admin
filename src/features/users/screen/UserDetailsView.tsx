@@ -13,7 +13,7 @@ import { getUserById } from '../api/userApi';
 
 export const UserDetailsView: React.FC = () => {
   const params = useParams();
-  const id = params.id as string;
+  const id = params?.id as string;
   const [data, setData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 

@@ -11,10 +11,14 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
   const token = sessionStorage.getItem("token");
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
     "ngrok-skip-browser-warning": "69420",
     ...((options.headers as Record<string, string>) || {}),
   };
+
+  const isFormData = typeof window !== 'undefined' && typeof FormData !== 'undefined' && options.body instanceof FormData;
+  if (!isFormData && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;

@@ -13,8 +13,8 @@ import { useRoleDetails } from '../hooks/useRoleDetails';
 
 export function RoleEditView() {
   const params = useParams();
-  const id = params.id as string;
-  const { role, loading } = useRoleDetails(id);
+  const id = params?.id as string;
+  const { role, loading } = useRoleDetails(id || "");
 
   if (loading) {
     return <AppLoader message="Loading role..." />;

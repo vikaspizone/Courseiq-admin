@@ -6,18 +6,23 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, Heart, BookOpen } from 'lucide-react';
 import { ROUTES } from '@/features/common/constants/routes';
 import { COURSE_STRINGS } from '../constants';
-
-const MOCK_FAVORITES = [
-  { id: 1, title: 'Introduction to React Native', category: 'Mobile Development', author: 'John Doe' },
-  { id: 2, title: 'Advanced UI/UX Design', category: 'Design', author: 'Jane Smith' },
-  { id: 3, title: 'Mastering Next.js 14', category: 'Web Development', author: 'Alex Johnson' },
-];
+import { AppLoader } from '@/features/common/components/AppLoader';
+import { useCourseFav } from '../hooks/useCourseFav';
 
 export function CourseFavView() {
   const strings = COURSE_STRINGS['en'];
+  const searchParams = useSearchParams();
+  const courseId = searchParams?.get('courseId');
+
+  const { favorites, loading, handleRemoveFavorite } = useCourseFav(courseId);
+
+  if (loading) {
+    return <AppLoader message="Loading favorites..." />;
+  }
 
   return (
     <div className="p-6 md:p-8 w-full space-y-6">
@@ -43,28 +48,51 @@ export function CourseFavView() {
           <table className="w-full text-sm text-left">
             <thead className="bg-gray-50/50 text-gray-500 font-medium border-b border-gray-100">
               <tr>
+                <th className="px-6 py-4">{strings.TH_STUDENT || 'User'}</th>
+                <th className="px-6 py-4">Email</th>
                 <th className="px-6 py-4">{strings.TH_COURSE_TITLE}</th>
-                <th className="px-6 py-4">{strings.TH_CATEGORY}</th>
-                <th className="px-6 py-4">{strings.TH_AUTHOR}</th>
                 <th className="px-6 py-4 text-right">{strings.TH_ACTIONS}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {MOCK_FAVORITES.map((course) => (
-                <tr key={course.id} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-blue-500" />
-                    {course.title}
-                  </td>
-                  <td className="px-6 py-4 text-gray-500">{course.category}</td>
-                  <td className="px-6 py-4 text-gray-500">{course.author}</td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="inline-flex p-1.5 items-center justify-center rounded-md text-red-500 hover:bg-red-50 transition-colors" title={strings.REMOVE_FAV}>
-                      <Heart className="w-4 h-4 fill-current" />
-                    </button>
+              {favorites.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                    {strings.NO_FAVS_FOUND}
                   </td>
                 </tr>
-              ))}
+              ) : (
+                favorites.map((item: any) => {
+                  const user = item.user || item.student || {};
+                  return (
+                  <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-6 py-4 font-medium text-gray-900">
+                      {user.name || user.first_name || user.username || 'Anonymous'}
+                    </td>
+                    <td className="px-6 py-4 text-gray-500">{user.email || '-'}</td>
+                    <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-blue-500" />
+                      {item.course?.title || item.title || 'Course'}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button 
+                        onClick={async () => {
+                          if (confirm(strings.CONFIRM_REMOVE_FAV)) {
+                            const success = await handleRemoveFavorite(item.id);
+                            if (!success) {
+                              alert(strings.FAILED_REMOVE_FAV);
+                            }
+                          }
+                        }}
+                        className="inline-flex p-1.5 items-center justify-center rounded-md text-red-500 hover:bg-red-50 transition-colors" 
+                        title={strings.REMOVE_FAV}
+                      >
+                        <Heart className="w-4 h-4 fill-current" />
+                      </button>
+                    </td>
+                  </tr>
+                )})
+              )}
             </tbody>
           </table>
         </div>

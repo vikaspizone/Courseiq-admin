@@ -17,5 +17,7 @@ export const API_ENDPOINTS = {
   ROLES: '/roles',
   USERS: '/users',
   COURSE: '/courses',
+  FAVORITE_COURSES: '/favorite-courses',
+  COURSE_RATINGS: '/course-ratings',
   // Add other API endpoints here as needed
 };

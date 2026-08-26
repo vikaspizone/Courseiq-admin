@@ -13,8 +13,8 @@ import { useModuleDetails } from '../hooks/useModuleDetails';
 
 export function ModuleEditView() {
   const params = useParams();
-  const id = params.id as string;
-  const { module, loading } = useModuleDetails(id);
+  const id = params?.id as string;
+  const { module, loading } = useModuleDetails(id || "");
 
   if (loading) {
     return <AppLoader message="Loading module..." />;

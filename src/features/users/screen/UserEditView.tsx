@@ -13,8 +13,8 @@ import { useUserDetails } from '../hooks/useUserDetails';
 
 export function UserEditView() {
   const params = useParams();
-  const id = params.id as string;
-  const { user, loading } = useUserDetails(id);
+  const id = params?.id as string;
+  const { user, loading } = useUserDetails(id || "");
 
   if (loading) {
     return <AppLoader message="Loading user..." />;

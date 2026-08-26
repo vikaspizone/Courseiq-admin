@@ -13,8 +13,8 @@ import { useCourseDetails } from '../hooks/useCourseDetails';
 export const CourseDetailsView: React.FC = () => {
   const strings = COURSE_STRINGS['en'];
   const params = useParams();
-  const id = params.id as string;
-  const { data, loading } = useCourseDetails(id);
+  const id = params?.id as string;
+  const { data, loading } = useCourseDetails(id || '');
 
   if (loading) {
     return <div className="p-8 flex justify-center"><div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div></div>;

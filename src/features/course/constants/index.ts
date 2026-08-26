@@ -67,6 +67,10 @@ export const COURSE_STRINGS = {
     TH_RATING: "Rating",
     TH_COMMENT: "Comment",
     TH_COURSE_TITLE: "Course Title",
+    CONFIRM_REMOVE_FAV: "Are you sure you want to remove this course from favorites?",
+    FAILED_REMOVE_FAV: "Failed to remove favorite",
+    NO_FAVS_FOUND: "No favorite courses found.",
+    NO_RATINGS_FOUND: "No ratings found for this course.",
   },
   hi: {
     TITLE: "कोर्स (Courses)",
@@ -133,5 +137,9 @@ export const COURSE_STRINGS = {
     TH_RATING: "रेटिंग",
     TH_COMMENT: "टिप्पणी",
     TH_COURSE_TITLE: "कोर्स का शीर्षक",
+    CONFIRM_REMOVE_FAV: "क्या आप वाकई इस कोर्स को पसंदीदा से हटाना चाहते हैं?",
+    FAILED_REMOVE_FAV: "पसंदीदा हटाने में विफल",
+    NO_FAVS_FOUND: "कोई पसंदीदा कोर्स नहीं मिला।",
+    NO_RATINGS_FOUND: "इस कोर्स के लिए कोई रेटिंग नहीं मिली।",
   }
 };

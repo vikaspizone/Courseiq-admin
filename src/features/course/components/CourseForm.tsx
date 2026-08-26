@@ -7,7 +7,7 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import { Course } from '../types';
-import { ArrowLeft, Save, FileText, Lightbulb, Link as LinkIcon, DollarSign, BookOpen, ImageIcon, Settings, Globe, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save, FileText, Lightbulb, Link as LinkIcon, DollarSign, BookOpen, ImageIcon, Settings, Globe, Plus, Trash2, Info } from 'lucide-react';
 import Link from 'next/link';
 import { useCourseForm } from '../hooks/useCourseForm';
 import { useCourseFormState } from '../hooks/useCourseFormState';
@@ -19,10 +19,59 @@ interface CourseFormProps {
   initialData?: Course;
 }
 
+const TagsInput = ({ field, form }: any) => {
+  const tags = Array.isArray(field.value) ? field.value : [];
+  const [inputValue, setInputValue] = React.useState('');
+
+  const handleAdd = () => {
+    if (inputValue.trim() && !tags.includes(inputValue.trim())) {
+      form.setFieldValue(field.name, [...tags, inputValue.trim()]);
+      setInputValue('');
+    }
+  };
+
+  const handleRemove = (indexToRemove: number) => {
+    form.setFieldValue(field.name, tags.filter((_: any, i: number) => i !== indexToRemove));
+  };
+
+  return (
+    <div>
+      <label className="text-sm font-medium text-gray-700 block mb-1">Topics</label>
+      <div className="flex flex-wrap gap-2 mb-2">
+        {tags.map((tag: string, i: number) => (
+          <span key={i} className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
+            {tag}
+            <button type="button" onClick={() => handleRemove(i)} className="ml-2 text-blue-600 hover:text-blue-900 font-bold">&times;</button>
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <input 
+          type="text" 
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleAdd();
+            }
+          }}
+          placeholder="Add a topic (e.g. JavaScript)"
+          className="flex-1 rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+        />
+        <button type="button" onClick={handleAdd} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-md transition-colors">
+          + Add
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export const CourseForm: React.FC<CourseFormProps> = ({ initialData }) => {
   const { categories, activeTab, setActiveTab, contentLang, setContentLang } = useCourseFormState();
 
   const { isEditing, handleSubmit } = useCourseForm(initialData);
+  const [showSlugTips, setShowSlugTips] = React.useState(false);
   const strings = COURSE_STRINGS['en']; // Hardcoding 'en' for now
 
   const getTranslationData = (langCode: string, field: 'title' | 'description' | 'overview') => {
@@ -59,8 +108,9 @@ export const CourseForm: React.FC<CourseFormProps> = ({ initialData }) => {
 
   const tabs = [
     { id: 'basic', label: 'Basic Info', icon: Settings },
-    { id: 'media', label: 'Media & Topics', icon: ImageIcon },
+    { id: 'topics', label: 'Topics', icon: BookOpen },
     { id: 'pricing', label: 'Pricing', icon: DollarSign },
+    { id: 'media', label: 'Media', icon: ImageIcon },
   ];
 
   return (
@@ -100,7 +150,9 @@ export const CourseForm: React.FC<CourseFormProps> = ({ initialData }) => {
           
           thumbnail: initialData?.thumbnail || '',
           image: initialData?.image || '',
-          topics: initialData?.topics ? JSON.stringify(initialData.topics, null, 2) : '{}',
+          media: initialData?.media || [],
+          mediaFiles: [],
+          topics: Array.isArray(initialData?.topics) ? initialData.topics : (initialData?.topics ? (typeof initialData.topics === 'object' ? Object.values(initialData.topics) : []) : []),
           
           prices: initialPricesArray,
         }}
@@ -185,7 +237,34 @@ export const CourseForm: React.FC<CourseFormProps> = ({ initialData }) => {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-700 block mb-1">Slug *</label>
+                      <div className="flex items-center gap-1 mb-1 relative">
+                        <label className="text-sm font-medium text-gray-700 block">Slug *</label>
+                        <button type="button" onClick={() => setShowSlugTips(!showSlugTips)} className="text-gray-400 hover:text-blue-600 transition-colors">
+                          <Info className="w-4 h-4" />
+                        </button>
+                        {showSlugTips && (
+                          <div className="absolute top-full left-0 mt-1 z-10 w-72 bg-blue-50/95 p-4 rounded-xl border border-blue-100 shadow-lg backdrop-blur-sm">
+                            <div className="flex items-center gap-2 mb-2 text-blue-800 font-semibold">
+                              <Lightbulb className="w-4 h-4 text-amber-500" />
+                              Tips for better courses
+                            </div>
+                            <ul className="space-y-2 text-xs text-blue-800/80">
+                              <li className="flex items-start gap-2">
+                                <span className="bg-blue-200 w-1.5 h-1.5 rounded-full mt-1 shrink-0"></span>
+                                <span>Use a short, descriptive slug (e.g. <code>learn-react</code>). It will be used in the URL.</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="bg-blue-200 w-1.5 h-1.5 rounded-full mt-1 shrink-0"></span>
+                                <span>Provide high quality images. We recommend 1920x1080 for covers.</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="bg-blue-200 w-1.5 h-1.5 rounded-full mt-1 shrink-0"></span>
+                                <span>Both English and Hindi titles help you reach a wider audience.</span>
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </div>
                       <Field name="slug" className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500" placeholder="e.g. react-basics" />
                       <ErrorMessage name="slug" component="div" className="text-xs text-red-500 mt-1" />
                     </div>
@@ -230,23 +309,193 @@ export const CourseForm: React.FC<CourseFormProps> = ({ initialData }) => {
 
 
 
-                {/* --- TAB 3: MEDIA & TOPICS --- */}
+                {/* --- TAB 3: MEDIA --- */}
                 <div className={activeTab === 'media' ? 'block' : 'hidden'}>
                   <div className="space-y-6">
+                    <FieldArray name="media">
+                      {({ push, remove, form }) => (
+                        <div className="space-y-6">
+                          <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">Course Media</h3>
+                            <button
+                              type="button"
+                              onClick={() => push({
+                                is_thumbnail: false,
+                                is_url: true,
+                                file_url: '',
+                                type: 'image',
+                                sort_order: form.values.media.length + 1
+                              })}
+                              className="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-100 transition"
+                            >
+                              <Plus className="w-4 h-4 inline mr-1" /> Add Media
+                            </button>
+                          </div>
+                          
+                          {form.values.media.length === 0 && (
+                            <div className="text-center p-8 border-2 border-dashed border-gray-200 rounded-xl">
+                              <p className="text-gray-500">No media items added yet.</p>
+                            </div>
+                          )}
+
+                          {form.values.media.map((mediaItem: any, index: number) => (
+                            <div key={index} className="border border-gray-200 rounded-xl p-5 relative bg-gray-50/30">
+                              <button
+                                type="button"
+                                onClick={() => remove(index)}
+                                className="absolute top-4 right-4 text-red-500 hover:text-red-700 bg-red-50 p-1.5 rounded-md transition"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+
+                              <h4 className="font-semibold text-gray-800 mb-4">Media Item {index + 1}</h4>
+                              
+                              <div className="flex flex-col md:flex-row gap-6">
+                                {/* Left Side: Fields */}
+                                <div className="flex-1 space-y-4">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                      <label className="text-xs text-gray-600 block mb-1">Type</label>
+                                      <Field name={`media.${index}.type`} as="select" className="w-full rounded-md border border-gray-200 p-2 text-sm">
+                                        <option value="image">Image</option>
+                                        <option value="video">Video</option>
+                                        <option value="document">Document</option>
+                                      </Field>
+                                    </div>
+                                    <div>
+                                      <label className="text-xs text-gray-600 block mb-1">Sort Order</label>
+                                      <Field type="number" name={`media.${index}.sort_order`} className="w-full rounded-md border border-gray-200 p-2 text-sm" />
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-6">
+                                    <label className="flex items-center space-x-2 text-sm text-gray-700">
+                                      <input 
+                                        type="checkbox" 
+                                        checked={mediaItem.is_thumbnail}
+                                        onChange={(e) => {
+                                          const isChecked = e.target.checked;
+                                          if (isChecked) {
+                                            const hasThumbnail = form.values.media.some((m: any, i: number) => i !== index && m.is_thumbnail);
+                                            if (hasThumbnail) {
+                                              form.values.media.forEach((_: any, i: number) => {
+                                                if (i !== index) form.setFieldValue(`media.${i}.is_thumbnail`, false);
+                                              });
+                                            }
+                                          }
+                                          form.setFieldValue(`media.${index}.is_thumbnail`, isChecked);
+                                        }}
+                                        className="rounded text-blue-600 focus:ring-blue-500" 
+                                      />
+                                      <span>Is Thumbnail?</span>
+                                    </label>
+                                    <label className="flex items-center space-x-2 text-sm text-gray-700">
+                                      <Field type="checkbox" name={`media.${index}.is_url`} className="rounded text-blue-600 focus:ring-blue-500" />
+                                      <span>Is URL (External Link)?</span>
+                                    </label>
+                                  </div>
+
+                                  <div>
+                                    {mediaItem.is_url ? (
+                                      <div>
+                                        <label className="text-xs text-gray-600 block mb-1">File URL</label>
+                                        <Field type="text" name={`media.${index}.file_url`} placeholder="https://..." className="w-full rounded-md border border-gray-200 p-2 text-sm" />
+                                      </div>
+                                    ) : (
+                                      <div>
+                                        <label className="text-xs text-gray-600 block mb-1">Upload File</label>
+                                        <input 
+                                          type="file" 
+                                          accept={mediaItem.type === 'image' ? 'image/*' : mediaItem.type === 'video' ? 'video/*' : '.pdf,.doc,.docx,.txt'}
+                                          onChange={(e) => {
+                                            if (e.target.files && e.target.files[0]) {
+                                              const file = e.target.files[0];
+                                              
+                                              // Client-side validation: 2MB limit
+                                              if (file.size > 2 * 1024 * 1024) {
+                                                alert(`File ${file.name} exceeds the size limit. (Limit: 2MB)`);
+                                                e.target.value = ''; // Reset input
+                                                return;
+                                              }
+
+                                              const newFiles = [...form.values.mediaFiles, file];
+                                              form.setFieldValue('mediaFiles', newFiles);
+                                              // Store a temporary object URL for preview
+                                              form.setFieldValue(`media.${index}._previewUrl`, URL.createObjectURL(file));
+                                            }
+                                          }}
+                                          className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* Right Side: Preview */}
+                                <div className="w-full md:w-48 lg:w-64 flex-shrink-0 flex flex-col">
+                                  <label className="text-xs text-gray-600 block mb-1 capitalize text-center">
+                                    {mediaItem.type} Preview
+                                  </label>
+                                  <div className="flex-1 w-full min-h-[120px] bg-gray-100 border border-gray-200 rounded-lg overflow-hidden flex items-center justify-center text-gray-400 relative">
+                                    {(() => {
+                                      const backendUrl = process.env.NEXT_PUBLIC_API_URL || '';
+                                      const mediaSrc = mediaItem._previewUrl 
+                                        ? mediaItem._previewUrl 
+                                        : (mediaItem.is_url ? mediaItem.file_url : (mediaItem.file_url ? `${backendUrl}${mediaItem.file_url}` : ''));
+                                        
+                                      if (mediaSrc) {
+                                        if (mediaItem.type === 'image') {
+                                          return (
+                                            <img 
+                                              src={mediaSrc} 
+                                              alt="Preview" 
+                                              className="w-full h-full object-cover"
+                                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                            />
+                                          );
+                                        } else if (mediaItem.type === 'video') {
+                                          return (
+                                            <video 
+                                              src={mediaSrc} 
+                                              className="w-full h-full object-cover" 
+                                              controls 
+                                            />
+                                          );
+                                        } else {
+                                          return (
+                                            <div className="flex flex-col items-center justify-center text-blue-500 w-full h-full p-4">
+                                              <FileText className="w-10 h-10 mb-2" />
+                                              <a href={mediaSrc} target="_blank" rel="noreferrer" className="text-xs hover:underline text-center break-all">
+                                                View Document
+                                              </a>
+                                            </div>
+                                          );
+                                        }
+                                      } else {
+                                        return (
+                                          <div className="text-xs flex flex-col items-center">
+                                            <ImageIcon className="w-8 h-8 mb-2 opacity-50" />
+                                            No preview
+                                          </div>
+                                        );
+                                      }
+                                    })()}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </FieldArray>
+                  </div>
+                </div>
+
+                {/* --- TAB 3.5: TOPICS --- */}
+                <div className={activeTab === 'topics' ? 'block' : 'hidden'}>
+                  <div className="space-y-6">
                     <div>
-                      <label className="text-sm font-medium text-gray-700 block mb-1">Thumbnail URL</label>
-                      <Field name="thumbnail" className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500" placeholder="https://..." />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 block mb-1">Cover Image URL</label>
-                      <Field name="image" className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500" placeholder="https://..." />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 block mb-1 flex justify-between">
-                        <span>Topics (JSON)</span>
-                        <span className="text-gray-400 font-normal">Valid JSON format required</span>
-                      </label>
-                      <Field as="textarea" rows={6} name="topics" className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-500 bg-gray-50" />
+                      <Field name="topics" component={TagsInput} />
                     </div>
                   </div>
                 </div>
@@ -271,13 +520,10 @@ export const CourseForm: React.FC<CourseFormProps> = ({ initialData }) => {
                             </div>
                           )}
                           
-                          {values.prices.map((price, index) => (
+                          {values.prices.slice(0, 1).map((price: any, index: number) => (
                             <div key={index} className="border border-gray-200 rounded-xl p-5 relative bg-gray-50/30">
-                              <button type="button" onClick={() => remove(index)} className="absolute top-4 right-4 text-gray-400 hover:text-red-500">
-                                <Trash2 className="w-4 h-4" />
-                              </button>
                               
-                              <h4 className="font-semibold text-gray-800 mb-4">Pricing Plan #{index + 1}</h4>
+                              <h4 className="font-semibold text-gray-800 mb-4">Pricing Plan</h4>
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                 <div>
                                   <label className="text-xs text-gray-600 block mb-1">Currency</label>
@@ -319,11 +565,6 @@ export const CourseForm: React.FC<CourseFormProps> = ({ initialData }) => {
                             </div>
                           ))}
                           
-                          {values.prices.length > 0 && (
-                            <button type="button" onClick={() => push({ currency: 'INR', price: 0, discount_price: 0, discount_type: 'none', discount_value: 0, discount_start_at: '', discount_end_at: '' })} className="text-blue-600 text-sm font-medium hover:underline flex items-center">
-                              <Plus className="w-4 h-4 mr-1" /> Add another pricing plan
-                            </button>
-                          )}
                         </div>
                       )}
                     </FieldArray>
@@ -341,30 +582,8 @@ export const CourseForm: React.FC<CourseFormProps> = ({ initialData }) => {
               </div>
             </div>
 
-            {/* Right Sidebar Hints */}
-            <div className="w-full lg:w-80 shrink-0">
-              <div className="bg-blue-50/50 p-6 rounded-xl border border-blue-100">
-                <div className="flex items-center gap-2 mb-3 text-blue-800 font-semibold">
-                  <Lightbulb className="w-5 h-5 text-amber-500" />
-                  Tips for better courses
-                </div>
-                <ul className="space-y-3 text-sm text-blue-800/80">
-                  <li className="flex items-start gap-2">
-                    <span className="bg-blue-200 w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"></span>
-                    <span>Use a short, descriptive slug (e.g. <code>learn-react</code>). It will be used in the URL.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="bg-blue-200 w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"></span>
-                    <span>Provide high quality images. We recommend 1920x1080 for covers.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="bg-blue-200 w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"></span>
-                    <span>Both English and Hindi titles help you reach a wider audience.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
             
+
           </Form>
         )}
       </Formik>

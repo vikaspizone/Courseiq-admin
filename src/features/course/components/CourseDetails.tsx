@@ -199,6 +199,39 @@ export const CourseDetails: React.FC<Props> = ({ data }) => {
                      <img src={data.image} alt="Cover" className="w-full max-w-md rounded-xl border border-gray-200 shadow-sm" />
                   </div>
                 )}
+
+                {data.media && data.media.length > 0 && (
+                  <div>
+                     <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                       <ImageIcon className="w-4 h-4 text-gray-400" /> Course Media
+                     </h4>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                       {data.media.map((item, idx) => (
+                         <div key={item.id || idx} className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                           {item.type === 'image' || (item.mime_type && item.mime_type.startsWith('image/')) || item.file_url?.match(/\.(jpeg|jpg|gif|png)$/) ? (
+                             <img 
+                               src={item.is_url ? item.file_url : `${process.env.NEXT_PUBLIC_API_URL || ''}${item.file_url}`} 
+                               alt={item.file_name || 'Media'} 
+                               className="w-full h-48 object-cover" 
+                             />
+                           ) : (
+                             <div className="w-full h-48 bg-gray-50 flex flex-col items-center justify-center text-gray-400 p-4 text-center">
+                               <FileText className="w-10 h-10 mb-2 text-gray-300" />
+                               <span className="text-sm font-medium">{item.file_name || 'Document'}</span>
+                               <a href={item.is_url ? item.file_url : `${process.env.NEXT_PUBLIC_API_URL || ''}${item.file_url}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline mt-2 text-xs">
+                                 View File
+                               </a>
+                             </div>
+                           )}
+                           <div className="p-3 bg-white text-xs text-gray-500 font-medium border-t border-gray-100 flex justify-between items-center">
+                             <span className="capitalize">{item.type}</span>
+                             {item.is_thumbnail && <span className="text-[10px] uppercase bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-bold">Thumbnail</span>}
+                           </div>
+                         </div>
+                       ))}
+                     </div>
+                  </div>
+                )}
              </div>
           </div>
 

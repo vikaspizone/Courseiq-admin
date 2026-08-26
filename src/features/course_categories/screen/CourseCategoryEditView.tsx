@@ -13,7 +13,7 @@ import { AppLoader } from '@/features/common/components/AppLoader';
 
 export const CourseCategoryEditView: React.FC = () => {
   const params = useParams();
-  const id = params.id as string;
+  const id = params?.id as string;
   const [category, setCategory] = useState<CourseCategory | null>(null);
   const [loading, setLoading] = useState(true);
 

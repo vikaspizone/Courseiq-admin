@@ -6,18 +6,23 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, Star, BookOpen, User } from 'lucide-react';
 import { ROUTES } from '@/features/common/constants/routes';
 import { COURSE_STRINGS } from '../constants';
-
-const MOCK_RATINGS = [
-  { id: 1, courseTitle: 'Introduction to React Native', student: 'Alice Smith', rating: 5, comment: 'Excellent course, highly recommended!' },
-  { id: 2, courseTitle: 'Advanced UI/UX Design', student: 'Bob Johnson', rating: 4, comment: 'Very good material, could use more examples.' },
-  { id: 3, courseTitle: 'Mastering Next.js 14', student: 'Charlie Davis', rating: 5, comment: 'The best Next.js course I have taken.' },
-];
+import { AppLoader } from '@/features/common/components/AppLoader';
+import { useCourseRatings } from '../hooks/useCourseRatings';
 
 export function CourseRatingView() {
   const strings = COURSE_STRINGS['en'];
+  const searchParams = useSearchParams();
+  const courseId = searchParams?.get('courseId');
+
+  const { ratings, loading } = useCourseRatings(courseId);
+
+  if (loading) {
+    return <AppLoader message="Loading ratings..." />;
+  }
 
   return (
     <div className="p-6 md:p-8 w-full space-y-6">
@@ -45,33 +50,47 @@ export function CourseRatingView() {
               <tr>
                 <th className="px-6 py-4">{strings.TH_COURSE_TITLE}</th>
                 <th className="px-6 py-4">{strings.TH_STUDENT}</th>
+                <th className="px-6 py-4">Email</th>
                 <th className="px-6 py-4">{strings.TH_RATING}</th>
                 <th className="px-6 py-4">{strings.TH_COMMENT}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {MOCK_RATINGS.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-blue-500" />
-                    {item.courseTitle}
-                  </td>
-                  <td className="px-6 py-4 text-gray-500 flex items-center gap-2">
-                    <User className="w-4 h-4 text-gray-400" />
-                    {item.student}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`w-4 h-4 ${i < item.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-gray-500 max-w-xs truncate" title={item.comment}>
-                    {item.comment}
+              {ratings.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                    {strings.NO_RATINGS_FOUND}
                   </td>
                 </tr>
-              ))}
+              ) : (
+                ratings.map((item: any) => {
+                  const user = item.user || {};
+                  return (
+                  <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-blue-500" />
+                      {item.course?.title || item.courseTitle || 'Course'}
+                    </td>
+                    <td className="px-6 py-4 text-gray-500">
+                      <div className="flex items-center gap-2">
+                        <User className="w-4 h-4 text-gray-400" />
+                        {user.name || item.student || 'Student'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-500">{user.email || '-'}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className={`w-4 h-4 ${i < (item.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-500 max-w-xs truncate" title={item.comment || item.review}>
+                      {item.comment || item.review || '-'}
+                    </td>
+                  </tr>
+                )})
+              )}
             </tbody>
           </table>
         </div>

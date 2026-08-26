@@ -31,6 +31,7 @@ export interface Course {
   language: string;
   topics: any;
   status: string;
+  media?: any[];
   translations: CourseTranslation[];
   price?: any;
   prices: CoursePrice[];
@@ -50,4 +51,6 @@ export interface CoursePayload {
   status: string;
   translations: CourseTranslation[];
   prices: CoursePrice[];
+  media?: any[];
+  mediaFiles?: File[];
 }

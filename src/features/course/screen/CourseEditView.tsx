@@ -12,8 +12,8 @@ import { useCourseEdit } from '../hooks/useCourseEdit';
 
 export const CourseEditView: React.FC = () => {
   const params = useParams();
-  const id = params.id as string;
-  const { course, loading } = useCourseEdit(id);
+  const id = params?.id as string;
+  const { course, loading } = useCourseEdit(id || '');
 
   if (loading) {
     return <AppLoader message="Loading course..." />;

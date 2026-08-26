@@ -13,8 +13,8 @@ import { usePermissionDetails } from '../hooks/usePermissionDetails';
 
 export function PermissionEditView() {
   const params = useParams();
-  const id = params.id as string;
-  const { permission, loading } = usePermissionDetails(id);
+  const id = params?.id as string;
+  const { permission, loading } = usePermissionDetails(id || "");
 
   if (loading) {
     return <AppLoader message="Loading permission..." />;

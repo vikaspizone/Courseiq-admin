@@ -63,20 +63,44 @@ export const useCourseForm = (initialData?: Course) => {
           type: values.type,
           level: values.level,
           slug: values.slug,
-          thumbnail: values.thumbnail || '',
-          image: values.image || '',
           language: values.language,
           topics: parsedTopics,
           status: values.status,
           translations,
-          price: pricePayload
+          price: pricePayload,
+          media: (values.media || []).map((m: any) => {
+            const { id, course_id, created_at, updated_at, created_by, updated_by, file_name, file_path, mime_type, file_size, is_active, _previewUrl, ...rest } = m;
+            return rest;
+          })
         };
 
+        let finalPayload: any = payload;
+        
+        if (values.mediaFiles && values.mediaFiles.length > 0) {
+          const formData = new FormData();
+          
+          Object.keys(payload).forEach(key => {
+            if (payload[key] !== undefined && payload[key] !== null) {
+              if (typeof payload[key] === 'object') {
+                formData.append(key, JSON.stringify(payload[key]));
+              } else {
+                formData.append(key, payload[key]);
+              }
+            }
+          });
+
+          values.mediaFiles.forEach((file: File) => {
+            formData.append('mediaFiles', file);
+          });
+          
+          finalPayload = formData;
+        }
+
       if (isEditing && initialData.id) {
-        await updateCourse(initialData.id, payload);
+        await updateCourse(initialData.id, finalPayload);
         alert('Course updated successfully');
       } else {
-        await createCourse(payload);
+        await createCourse(finalPayload);
         alert('Course created successfully');
       }
 

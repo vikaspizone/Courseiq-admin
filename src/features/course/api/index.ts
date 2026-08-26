@@ -21,18 +21,20 @@ export const getCourseById = async (id: string): Promise<Course | null> => {
   return json.data || null;
 };
 
-export const createCourse = async (payload: CoursePayload): Promise<any> => {
+export const createCourse = async (payload: CoursePayload | FormData): Promise<any> => {
+  const isFormData = payload instanceof FormData;
   const res = await fetchWithAuth(API_ENDPOINTS.COURSE, {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: isFormData ? (payload as any) : JSON.stringify(payload),
   });
   return res.json();
 };
 
-export const updateCourse = async (id: string, payload: Partial<CoursePayload>): Promise<any> => {
+export const updateCourse = async (id: string, payload: Partial<CoursePayload> | FormData): Promise<any> => {
+  const isFormData = payload instanceof FormData;
   const res = await fetchWithAuth(`${API_ENDPOINTS.COURSE}/${id}`, {
     method: 'PUT',
-    body: JSON.stringify(payload),
+    body: isFormData ? (payload as any) : JSON.stringify(payload),
   });
   return res.json();
 };
@@ -41,5 +43,29 @@ export const deleteCourse = async (id: string): Promise<any> => {
   const res = await fetchWithAuth(`${API_ENDPOINTS.COURSE}/${id}`, {
     method: 'DELETE',
   });
+  return res.json();
+};
+
+export const getFavoriteCourses = async (): Promise<any> => {
+  const res = await fetchWithAuth(API_ENDPOINTS.FAVORITE_COURSES);
+  return res.json();
+};
+
+export const addFavoriteCourse = async (courseId: string): Promise<any> => {
+  const res = await fetchWithAuth(`${API_ENDPOINTS.FAVORITE_COURSES}/${courseId}`, {
+    method: 'POST',
+  });
+  return res.json();
+};
+
+export const removeFavoriteCourse = async (courseId: string): Promise<any> => {
+  const res = await fetchWithAuth(`${API_ENDPOINTS.FAVORITE_COURSES}/${courseId}`, {
+    method: 'DELETE',
+  });
+  return res.json();
+};
+
+export const getCourseRatingsByCourseId = async (courseId: string): Promise<any> => {
+  const res = await fetchWithAuth(`${API_ENDPOINTS.COURSE_RATINGS}/course/${courseId}`);
   return res.json();
 };
